@@ -1,0 +1,59 @@
+package uk.ac.ed.inf.powergrab;
+
+public class Position {
+    public double latitude;
+    public double longitude;
+    private static double dist = 0.0003;
+    private static double dist45deg = dist / Math.sqrt(2);
+    private static double long225 = Math.cos(Math.PI / 8) * dist;
+    private static double short225 = Math.sin(Math.PI / 8) * dist;
+    public Position(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+    public Position nextPosition(Direction direction) {        
+        switch (direction) {
+            case N:
+                return new Position(this.latitude + dist,this.longitude);
+            case E:
+                return new Position(this.latitude,this.longitude + dist);
+            case W:
+                return new Position(this.latitude,this.longitude - dist);
+            case S:
+                return new Position(this.latitude - dist,this.longitude);
+            case NW:
+                return new Position(this.latitude + dist45deg,this.longitude - dist45deg);
+            case NE:
+                return new Position(this.latitude + dist45deg,this.longitude + dist45deg);
+            case SW:
+                return new Position(this.latitude - dist45deg,this.longitude - dist45deg);
+            case SE:
+                return new Position(this.latitude - dist45deg,this.longitude + dist45deg);
+            case WNW:
+                return new Position(this.latitude + short225,this.longitude - long225);
+            case NNW:
+                return new Position(this.latitude + long225,this.longitude - short225);
+            case NNE:
+                return new Position(this.latitude + long225,this.longitude + short225);
+            case ENE:
+                return new Position(this.latitude + short225,this.longitude + long225);
+            case ESE:
+                return new Position(this.latitude - short225,this.longitude + long225);
+            case SSE:
+                return new Position(this.latitude - long225,this.longitude + short225);
+            case SSW:
+                return new Position(this.latitude - long225,this.longitude - short225);
+            case WSW:
+                return new Position(this.latitude - short225,this.longitude - long225);
+            default: return null;
+            }        
+    }
+    public boolean inPlayArea() {
+        if(this.latitude <=  55.946233 && this.latitude >= 55.942617) {
+            if(this.longitude <= -3.184319 && this.longitude >= -3.192473)
+                return true;
+        }
+        return false;
+    }
+
+}
