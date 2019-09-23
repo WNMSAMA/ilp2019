@@ -5,4 +5,5 @@ public enum Direction {
     NW,NE,SW,SE,
     WNW,NNW,NNE,ENE,
     ESE,SSE,SSW,WSW
+    
 }
