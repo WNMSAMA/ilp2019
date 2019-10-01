@@ -3,8 +3,11 @@ package uk.ac.ed.inf.powergrab;
 public class Position {
     public double latitude;
     public double longitude;
+    //the straight-line distance of each travel.
     private static double dist = 0.0003;
+    //the x-axis and y-axis displacement when travel in NW NE SW SE
     private static double dist45deg = dist / Math.sqrt(2);
+    //the x-axis and y-axis displacement when travel in other directions
     private static double long225 = Math.cos(Math.PI / 8) * dist;
     private static double short225 = Math.sin(Math.PI / 8) * dist;
     public Position(double latitude, double longitude) {
