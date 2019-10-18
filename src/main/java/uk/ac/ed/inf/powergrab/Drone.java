@@ -1,18 +1,22 @@
 package uk.ac.ed.inf.powergrab;
 
-public class Drone {
-    private Position position;
-    private double remainCoins;
-    private double remainPower;
-    private int remainSteps;
+import java.util.ArrayList;
+
+public abstract class Drone {
+    protected Position position;
+    protected double remainCoins;
+    protected double remainPower;
+    protected int remainSteps;
+    protected ArrayList<Station> stations;
     public enum DroneType{
         STATEFUL,STATELESS
     }
-    private DroneType droneType;
-    private boolean gameStatus;
-    public Drone(Position position, DroneType droneType) {
+    protected DroneType droneType;
+    protected boolean gameStatus;
+    public Drone(Position position, DroneType droneType, ArrayList<Station> stations) {
         this.position = position;
         this.droneType = droneType;
+        this.stations = stations;
         this.gameStatus = true;
         this.remainCoins = 0;
         this.remainPower = 250;
@@ -54,16 +58,13 @@ public class Drone {
     public void setGameStatus(boolean gameStatus) {
         this.gameStatus = gameStatus;
     }
-    public boolean move(Direction d) {
-        if (this.position.nextPosition(d).inPlayArea()) {
+    public void move(Direction d) {
             this.position  = this.position.nextPosition(d);
             this.remainPower -= 1.25;
             this.remainSteps -= 1;
             if (this.remainSteps == 0 || this.remainPower <= 0) this.gameStatus = false;
-            return true;
-        }
-        return false;
     }
+
     public void charge(Station s) {
         if (s.getCoins() < 0 ) {
             double coins = this.remainCoins;
@@ -81,4 +82,10 @@ public class Drone {
             s.setCoins(0);
             s.setSymbol(Station.Symbol.DEAD);}
     }
+    public double euclidDist(Position x, Position y) {
+        double sq1 = Math.pow(x.latitude - y.latitude,2);
+        double sq2 = Math.pow(x.longitude - y.longitude,2);
+        return Math.sqrt(sq1+sq2);
+    }
+    public abstract ArrayList<String> play();
 }

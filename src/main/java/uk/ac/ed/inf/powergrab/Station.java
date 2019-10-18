@@ -46,5 +46,9 @@ public class Station {
     public void setCorrdinate(Position corrdinate) {
         this.position = corrdinate;
     }
+    @Override
+    public String toString() {
+        return String.format("id = %s , coins = %s , power = %s , status = %s , position = %s",id,coins,power,symbol.toString(),position.toString());
+    }
     
 }

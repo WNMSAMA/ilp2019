@@ -7,3 +7,4 @@ public enum Direction {
     ESE,SSE,SSW,WSW
     
 }
+
