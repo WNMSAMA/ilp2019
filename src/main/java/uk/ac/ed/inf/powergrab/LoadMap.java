@@ -24,7 +24,7 @@ public class LoadMap {
         InputStream is = huc.getInputStream();
         Scanner s = new Scanner(is).useDelimiter("\\A");
         String str = s.hasNext() ? s.next() : "";
-        this.fc = FeatureCollection.fromJson(str); 
+        this.fc = FeatureCollection.fromJson(str);  
     }
     public ArrayList<Station> getStations(){
         return this.stations;
