@@ -44,7 +44,7 @@ public class Stateless extends Drone {
                     if (!this.gameStatus)
                         break;
                     charge(stt);
-                    this.stations.remove(stt);
+                    if(stt.getCoins() == 0 && stt.getPower() == 0)this.stations.remove(stt);
                     break;
                 }
                 
