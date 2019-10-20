@@ -18,7 +18,7 @@ public class Stateless extends Drone {
         ArrayList<String> res = new ArrayList<>();
         while (true) {
             if (!this.gameStatus) {
-                res.add("Game over. Remaining coins " + this.remainCoins);
+                //res.add("Game over. Remaining coins " + this.remainCoins);
                 break;
             }
             StringBuilder sb = new StringBuilder("");
@@ -44,6 +44,7 @@ public class Stateless extends Drone {
                     if (!this.gameStatus)
                         break;
                     charge(stt);
+                    this.stations.remove(stt);
                     break;
                 }
                 
