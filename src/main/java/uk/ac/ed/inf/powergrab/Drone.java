@@ -83,8 +83,8 @@ public abstract class Drone {
             s.setSymbol(Station.Symbol.DEAD);}
     }
     public double euclidDist(Position x, Position y) {
-        double sq1 = Math.pow(x.latitude - y.latitude,2);
-        double sq2 = Math.pow(x.longitude - y.longitude,2);
+        double sq1 = Math.pow(x.getLatitude() - y.getLatitude(),2);
+        double sq2 = Math.pow(x.getLongitude() - y.getLongitude(),2);
         return Math.sqrt(sq1+sq2);
     }
     public abstract ArrayList<String> play();

@@ -22,9 +22,9 @@ public class Stateless extends Drone {
                 break;
             }
             StringBuilder sb = new StringBuilder("");
-            sb.append(this.position.latitude);
+            sb.append(this.position.getLatitude());
             sb.append(",");
-            sb.append(this.position.longitude);
+            sb.append(this.position.getLongitude());
             sb.append(",");
             Direction nextdir;
             while (true) {
@@ -50,8 +50,8 @@ public class Stateless extends Drone {
                 
             }
             sb.append(nextdir + ",");
-            sb.append(this.position.latitude + ",");
-            sb.append(this.position.longitude + ",");
+            sb.append(this.position.getLatitude() + ",");
+            sb.append(this.position.getLongitude() + ",");
             sb.append(this.remainCoins + ",");
             sb.append(this.remainPower);    
             res.add(sb.toString());
