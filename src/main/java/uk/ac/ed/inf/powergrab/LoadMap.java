@@ -29,7 +29,13 @@ public class LoadMap {
     public ArrayList<Station> getStations(){
         return this.stations;
     }
-
+    
+    public FeatureCollection getFc() {
+        return fc;
+    }
+    public void setFc(FeatureCollection fc) {
+        this.fc = fc;
+    }
     public void saveStations() {
         for (Feature each : this.fc.features()) {
             String id = each.getProperty("id").getAsString();
