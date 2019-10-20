@@ -52,7 +52,7 @@ public class PlayPowergrab {
             StringBuilder sb = new StringBuilder();
             for(String each : res) {
                 sb.append(each);
-                sb.append("\n");
+                sb.append("\n"); 
             }
             
             FileOutputStream outputStream = new FileOutputStream(String.format("%s-%s-%s-%s.txt",args[6],args[0],args[1],args[2]));
