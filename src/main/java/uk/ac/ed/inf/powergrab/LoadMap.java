@@ -16,8 +16,8 @@ public class LoadMap {
         this.mapURL = mapURL;
         this.stations = new ArrayList<>();
         HttpURLConnection huc = (HttpURLConnection) mapURL.openConnection();
-        huc.setReadTimeout(10000); // milliseconds
-        huc.setConnectTimeout(15000); // milliseconds
+        huc.setReadTimeout(10000); 
+        huc.setConnectTimeout(15000); 
         huc.setRequestMethod("GET");
         huc.setDoInput(true);
         huc.connect();

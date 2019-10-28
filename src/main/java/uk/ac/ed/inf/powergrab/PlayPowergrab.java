@@ -32,6 +32,7 @@ public class PlayPowergrab {
     }
     public static void main(String[] args){
         try {
+            
             String link = String.format("http://homepages.inf.ed.ac.uk/stg/powergrab/%s/%s/%s/powergrabmap.geojson",
                     args[2], args[1], args[0]);
             URL url = new URL(link);
@@ -45,10 +46,12 @@ public class PlayPowergrab {
             }else {
                 drone = new Stateful(initpos,Drone.DroneType.STATEFUL,map.getStations(),rnd);
             }
+            long st = System.currentTimeMillis();
             ArrayList<String> res = drone.play();
             ArrayList<Point> points = getPoints(res);
             String strs = getNewGeoJson(map.getFc(),points);
             StringBuilder sb = new StringBuilder();
+            long end = System.currentTimeMillis();
             for(String each : res) {
                 sb.append(each);
                 sb.append("\n"); 
@@ -62,6 +65,7 @@ public class PlayPowergrab {
             outputStream2.write(strToBytes2);
             outputStream.close();
             outputStream2.close();
+            System.out.println(end-st);
             
         } catch (java.io.IOException e) {
             e.printStackTrace();

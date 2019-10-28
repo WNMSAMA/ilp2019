@@ -71,10 +71,31 @@ public class Position {
         }
         return false;
     }
+    public static Direction nextDirection(Position prev,Position next) {
+        double x = next.longitude - prev.longitude;
+        double y = next.latitude-prev.latitude;
+        if(x == 0 && y == dist) return Direction.N;
+        if(x == dist && y == 0) return Direction.E;
+        if(x == 0 && y == -dist) return Direction.W;
+        if(x == -dist && y == 0) return Direction.S;
+        if(x == -dist45deg && y == dist45deg) return Direction.NW;
+        if(x == dist45deg && y == dist45deg) return Direction.NE;
+        if(x == -dist45deg && y == -dist45deg) return Direction.SW;
+        if(x == dist45deg && y == -dist45deg) return Direction.SE;
+        if(x == - long225 && y == short225) return Direction.WNW;
+        if(x == - short225 && y == long225) return Direction.NNW;
+        if(x == short225 && y == long225) return Direction.NNE;
+        if(x == long225 && y == short225) return Direction.ENE;
+        if(x == long225 && y == - short225) return Direction.ESE;
+        if(x == short225 && y == - long225) return Direction.SSE;
+        if(x == - short225 && y == - long225) return Direction.SSW;
+        if(x == - long225 && y == - short225) return Direction.WSW;
+        return null;
+    }
     
     @Override
     public String toString() {
-        return "" + this.latitude + "  " +  this.longitude;
+        return "" + this.latitude + " , " +  this.longitude;
     }
 
 }

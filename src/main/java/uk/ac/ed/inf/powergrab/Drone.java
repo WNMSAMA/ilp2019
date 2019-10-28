@@ -82,10 +82,21 @@ public abstract class Drone {
             s.setCoins(0);
             s.setSymbol(Station.Symbol.DEAD);}
     }
-    public double euclidDist(Position x, Position y) {
+    public static double euclidDist(Position x, Position y) {
         double sq1 = Math.pow(x.getLatitude() - y.getLatitude(),2);
         double sq2 = Math.pow(x.getLongitude() - y.getLongitude(),2);
         return Math.sqrt(sq1+sq2);
     }
+    public static boolean inRange(Position currpos, Station s) {
+        double x1 = currpos.getLatitude() + 0.00025;
+        double x2 = currpos.getLatitude() - 0.00025;
+        double y1 = currpos.getLongitude() + 0.00025;
+        double y2 = currpos.getLongitude() - 0.00025;
+        if (s.getCorrdinate().getLatitude() <= x1 && s.getCorrdinate().getLatitude() >= x2
+                && s.getCorrdinate().getLongitude() <= y1 && s.getCorrdinate().getLongitude() >= y2)
+            return true;
+        return false;
+    }
+
     public abstract ArrayList<String> play();
 }
