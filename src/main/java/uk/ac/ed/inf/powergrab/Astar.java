@@ -46,7 +46,7 @@ public class Astar {
 
     }
     public double hValue(Position x, Position y) {
-        return Drone.euclidDist(x, y)*10;
+        return Drone.euclidDist(x, y);
     }
     public double cost(ArrayList<Position> ps) {
         return 1.25*(ps.size()-1);
@@ -73,7 +73,9 @@ public class Astar {
                 break;
             }
         }
-        if(checkArrival(track.get(0),s)) return track;
+        if(checkArrival(track.get(0),s)) {
+            return track;
+        }
         else if(checkInExplored(explored,track.get(0)) || b) {
             return find(s,rest,explored);
         }
@@ -93,14 +95,9 @@ public class Astar {
                 }
                 
             });
-//            for(Position each : rest.get(0)) {
-//                System.out.println("[" + each.getLongitude() + "," + each.getLatitude() + "]");
-//            }
-//            System.out.println("");
             return find(s,rest,explored);
         }
     }
-
     public ArrayList<Position> findPath(Position start, Station s) {
         ArrayList<ArrayList<Position>> init = new ArrayList<>();
         ArrayList<Position> initt = new ArrayList<>();

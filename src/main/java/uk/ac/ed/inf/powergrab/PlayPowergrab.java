@@ -47,7 +47,12 @@ public class PlayPowergrab {
                 drone = new Stateful(initpos,Drone.DroneType.STATEFUL,map.getStations(),rnd);
             }
             long st = System.currentTimeMillis();
+            ArrayList<Station> sts = new ArrayList<>();
+            for(Station s : map.getStations()) {
+                if(s.getSymbol() == Station.Symbol.LIGHTHOUSE) sts.add(s);
+            }
             ArrayList<String> res = drone.play();
+            //System.out.print(res);
             ArrayList<Point> points = getPoints(res);
             String strs = getNewGeoJson(map.getFc(),points);
             StringBuilder sb = new StringBuilder();

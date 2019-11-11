@@ -11,6 +11,7 @@ import java.util.Random;
 public class Stateful extends Drone {
     private Random rnd;
     private ArrayList<Station> badStations;
+    private final Astar astar;
 
     public Stateful(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
         super(position, droneType, stations);
@@ -20,98 +21,69 @@ public class Stateful extends Drone {
             if (each.getSymbol() == Station.Symbol.DANGER)
                 badStations.add(each);
         }
+        this.astar = new Astar(this.badStations);
     }
+    public Station findNearest(ArrayList<Station> sts,Position dp) {
+       Collections.sort(sts,new Comparator<Station>() {
 
-    public ArrayList<Direction> findDirs(ArrayList<Position> poss) {
-        int idx = 0;
-        ArrayList<Direction> res = new ArrayList<>();
-        while (idx < poss.size() - 1) {
-            Position prev = poss.get(idx);
-            Position next = poss.get(idx + 1);
-            res.add(Position.nextDirection(next,prev));
+        @Override
+        public int compare(Station o1, Station o2) {
+            Position p1 = o1.getCorrdinate();
+            Position p2 = o2.getCorrdinate();
+            double res1 = Drone.euclidDist(dp, p1);
+            double res2 = Drone.euclidDist(dp,p2);
+            if(res1 == res2) return 0;
+            return res1 < res2 ? -1 : 1;
         }
-        return res;
+           
+       });
+       return sts.get(0);
     }
-
+    public ArrayList<String> goStateless(Stateful sd) {
+        Stateless stl = new Stateless(position, Drone.DroneType.STATELESS, badStations, rnd);
+        return stl.play();
+    }
     @Override
     public ArrayList<String> play() {
         ArrayList<String> res = new ArrayList<>();
-        Astar as = new Astar(this.badStations);
         ArrayList<Station> remaingood = new ArrayList<>();
+        ArrayList<Station> again = new ArrayList<>();
         this.stations.forEach(s -> {
             if (s.getSymbol() == Station.Symbol.LIGHTHOUSE)
                 remaingood.add(s);
         });
-        while (true) {
-            if (remaingood.size() == 0) break;
-            if (!this.gameStatus) {
-                 res.add("Game over. Remaining coins " + this.remainCoins);
+        while(true) {
+            if(remaingood.size() == 0 && again.size() != 0) {
+                remaingood.clear();
+                remaingood.addAll(again);
+                again.clear();
+            }
+            if(remaingood.size() == 0 && again.size() == 0) {
                 break;
             }
-
-            Collections.sort(remaingood, new Comparator<Station>() {
-
-                @Override
-                public int compare(Station s0, Station s1) {
-                    double d1 = euclidDist(s0.getCorrdinate(), position);
-                    double d2 = euclidDist(s1.getCorrdinate(), position);
-                    if (d1 < d2)
-                        return -1;
-                    else if (d1 > d2)
-                        return 1;
-                    return 0;
-                }
-
-            });
-            while (true) {
-                Station s = remaingood.get(0);
-                ArrayList<Position> track = as.findPath(this.position, s);
-                if (track != null) {
-                    ArrayList<Direction> dirs = findDirs(track);
-                    for (int i = 0; i < dirs.size(); i++) {
-                        StringBuilder sb = new StringBuilder("");
-                        if (i == dirs.size() - 1) {
-                            sb.append(this.position.getLatitude());
-                            sb.append(",");
-                            sb.append(this.position.getLongitude());
-                            sb.append(",");
-                            sb.append(dirs.get(i) + ",");
-                            move(dirs.get(i));
-                            sb.append(this.position.getLatitude() + ",");
-                            sb.append(this.position.getLongitude() + ",");
-                            if (!this.gameStatus) {
-                                break;
-                            }
-                            charge(s);
-                            sb.append(this.remainCoins + ",");
-                            sb.append(this.remainPower);
-                            res.add(sb.toString());
-                            
-                        }
-                        sb.append(this.position.getLatitude());
-                        sb.append(",");
-                        sb.append(this.position.getLongitude());
-                        sb.append(",");
-                        sb.append(dirs.get(i) + ",");
-                        move(dirs.get(i));
-                        sb.append(this.position.getLatitude() + ",");
-                        sb.append(this.position.getLongitude() + ",");
-                        sb.append(this.remainCoins + ",");
-                        sb.append(this.remainPower);
-                        res.add(sb.toString());
-                        if (!this.gameStatus) {
-                            break;
-                        }
-
-                    }
-                    break;
-                }
-                if(track == null) {
-                    remaingood.remove(s);
-                }
-
+            Station nearest = findNearest(remaingood,this.position);
+            ArrayList<Position> ressss = astar.findPath(this.position, nearest);
+            if(ressss.size() <= 1) {
+                remaingood.remove(nearest);
+                again.add(nearest);
+                continue;
+            }            
+            Collections.reverse(ressss);
+            statefulMove(ressss);
+            if(!this.gameStatus)
+                break;
+            charge(nearest);
+            for(int i = 0 ; i < ressss.size()-1;i++) {
+                Direction dir = Position.nextDirection(ressss.get(i), ressss.get(i+1));
+                String s = String.format("%s,%s,%s,%s,%s",ressss.get(i),dir,ressss.get(i+1),this.remainCoins,this.remainPower);
+                res.add(s);
             }
             
+            remaingood.remove(nearest);
+        }
+        if(this.remainSteps != 0) {
+            ArrayList<String> fin = goStateless(this);
+            res.addAll(fin);
         }
         return res;
     }
