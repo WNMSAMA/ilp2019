@@ -8,12 +8,11 @@ import java.util.Scanner;
 import com.mapbox.geojson.*;
 
 public class LoadMap {
-    private URL mapURL;
     private FeatureCollection fc;
     private ArrayList<Station> stations;
 
+    @SuppressWarnings("resource")
     public LoadMap(URL mapURL) throws java.io.IOException {
-        this.mapURL = mapURL;
         this.stations = new ArrayList<>();
         HttpURLConnection huc = (HttpURLConnection) mapURL.openConnection();
         huc.setReadTimeout(10000); 
