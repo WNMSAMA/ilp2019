@@ -82,17 +82,14 @@ public abstract class Drone {
             this.gameStatus = false;
     }
 
-    public void statefulMove(ArrayList<Position> pos) {
-        for (Position p : pos) {
-            this.position = p;
+    public void statefulMove(Position next) {
+            this.position = next;
             this.remainSteps -= 1;
             this.remainPower -= 1.25;
             if (this.remainSteps == 0 || this.remainPower <= 0) {
                 this.gameStatus = false;
-                break;
             }
         }
-    }
 
 
     public void charge(Station s) {
