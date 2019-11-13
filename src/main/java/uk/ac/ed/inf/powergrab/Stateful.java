@@ -8,7 +8,7 @@ import java.util.Random;
 public class Stateful extends Drone {
     private Random rnd;
     private ArrayList<Station> badStations;
-    private final Astar astar;
+    private final GreedyPath greedypath;
 
     public Stateful(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
         super(position, droneType, stations);
@@ -18,7 +18,7 @@ public class Stateful extends Drone {
             if (each.getSymbol() == Station.Symbol.DANGER)
                 badStations.add(each);
         }
-        this.astar = new Astar(this.badStations);
+        this.greedypath = new GreedyPath(this.badStations);
     }
 
     public Station findNearest(ArrayList<Station> sts, Position dp) {
@@ -66,7 +66,7 @@ public class Stateful extends Drone {
                 break;
             }
             Station nearest = findNearest(remaingood, this.position);
-            ArrayList<Position> ressss = astar.findPath(this.position, nearest);
+            ArrayList<Position> ressss = greedypath.findPath(this.position, nearest);
             if(ressss == null) {
                 remaingood.remove(nearest);
                 continue;

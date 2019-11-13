@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class Astar {
+public class GreedyPath {
     private ArrayList<Station> bad;
 
-    public Astar(ArrayList<Station> bad) {
+    public GreedyPath(ArrayList<Station> bad) {
         this.bad = bad;
         
     }
@@ -47,12 +47,9 @@ public class Astar {
     public double hValue(Position x, Position y) {
         return Drone.euclidDist(x, y);
     }
-    public double cost(ArrayList<Position> ps) {
-        return 1.25*(ps.size()-1);
-    }
     public boolean checkInExplored(ArrayList<Position> explored,Position p) {
         for(Position pos : explored) {
-            if(Math.abs(pos.getLatitude()-p.getLatitude()) <= 0.00000001 && Math.abs(pos.getLongitude()-p.getLongitude()) <= 0.00000001)
+            if(Math.abs(pos.getLatitude()-p.getLatitude()) <= 1.0E-12d && Math.abs(pos.getLongitude()-p.getLongitude()) <= 1.0E-12d)
                 return true;
         }
         return false;
@@ -86,8 +83,8 @@ public class Astar {
 
                 @Override
                 public int compare(ArrayList<Position> arg0, ArrayList<Position> arg1) {
-                    double h0 = hValue(arg0.get(0),s.getCorrdinate());//+cost(arg0);
-                    double h1 = hValue(arg1.get(0),s.getCorrdinate());//+cost(arg1);
+                    double h0 = hValue(arg0.get(0),s.getCorrdinate());
+                    double h1 = hValue(arg1.get(0),s.getCorrdinate());
                     if(h0-h1 < 0) return -1;
                     else if(h0-h1 > 0) return 1;
                     else return 0;

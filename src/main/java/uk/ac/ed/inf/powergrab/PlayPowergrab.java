@@ -52,7 +52,6 @@ public class PlayPowergrab {
                 if(s.getSymbol() == Station.Symbol.LIGHTHOUSE) sts.add(s);
             }
             ArrayList<String> res = drone.play();
-            //System.out.print(res);
             ArrayList<Point> points = getPoints(res);
             String strs = getNewGeoJson(map.getFc(),points);
             StringBuilder sb = new StringBuilder();
