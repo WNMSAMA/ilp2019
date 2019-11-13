@@ -39,7 +39,7 @@ public class Stateless extends Drone {
                 flag = 1;
                 Station nearest = this.stations.get(nearstts.firstEntry().getValue());
                 if (nearest.getSymbol() == Station.Symbol.LIGHTHOUSE && nearstts.firstEntry().getKey() <= 0.00025) {
-                    statelessMove(d);
+                    move(d);
                     if (!this.gameStatus)
                         break;                       
                     charge(nearest);
@@ -55,7 +55,7 @@ public class Stateless extends Drone {
                 while (true) {
                     nextdir = Direction.values()[rnd.nextInt(16)];
                     if(dangers.contains(nextdir) || !this.position.nextPosition(nextdir).inPlayArea()) continue;
-                    statelessMove(nextdir);
+                    move(nextdir);
                     break;
                     
                 }

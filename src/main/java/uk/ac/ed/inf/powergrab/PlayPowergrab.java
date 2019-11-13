@@ -46,7 +46,7 @@ public class PlayPowergrab {
             }else {
                 drone = new Stateful(initpos,Drone.DroneType.STATEFUL,map.getStations(),rnd);
             }
-            long st = System.currentTimeMillis();
+            //long st = System.currentTimeMillis();
             ArrayList<Station> sts = new ArrayList<>();
             for(Station s : map.getStations()) {
                 if(s.getSymbol() == Station.Symbol.LIGHTHOUSE) sts.add(s);
@@ -55,7 +55,7 @@ public class PlayPowergrab {
             ArrayList<Point> points = getPoints(res);
             String strs = getNewGeoJson(map.getFc(),points);
             StringBuilder sb = new StringBuilder();
-            long end = System.currentTimeMillis();
+            //long end = System.currentTimeMillis();
             for(String each : res) {
                 sb.append(each);
                 sb.append("\n"); 
@@ -69,7 +69,7 @@ public class PlayPowergrab {
             outputStream2.write(strToBytes2);
             outputStream.close();
             outputStream2.close();
-            System.out.println(end-st);
+            //System.out.println(end-st);
             
         } catch (java.io.IOException e) {
             e.printStackTrace();

@@ -74,23 +74,13 @@ public abstract class Drone {
         this.gameStatus = gameStatus;
     }
 
-    public void statelessMove(Direction d) {
+    public void move(Direction d) {
         this.position = this.position.nextPosition(d);
         this.remainPower -= 1.25;
         this.remainSteps -= 1;
         if (this.remainSteps == 0 || this.remainPower <= 0)
             this.gameStatus = false;
     }
-
-    public void statefulMove(Position next) {
-            this.position = next;
-            this.remainSteps -= 1;
-            this.remainPower -= 1.25;
-            if (this.remainSteps == 0 || this.remainPower <= 0) {
-                this.gameStatus = false;
-            }
-        }
-
 
     public void charge(Station s) {
         if (s.getCoins() < 0) {
@@ -116,7 +106,37 @@ public abstract class Drone {
         double sq2 = Math.pow(x.getLongitude() - y.getLongitude(), 2);
         return Math.sqrt(sq1 + sq2);
     }
+    public static boolean canReach(Position pos, ArrayList<Station> badStations,ArrayList<Station> goodStations) {
+        if (!pos.inPlayArea())
+            return false;
+        ArrayList<Station> rangebad = new ArrayList<>();
+        ArrayList<Station> rangegood = new ArrayList<>();
+        badStations.forEach(s -> {
+            if (inRange(pos, s))
+                rangebad.add(s);
+        });
+        goodStations.forEach(s -> {
+            if (inRange(pos, s))
+                rangegood.add(s);
+        });
+        if (rangebad.size() != 0) {
+            for (Station each : rangebad) {
+                double disttobad = euclidDist(pos, each.getCorrdinate());
+                if ( disttobad <= 0.00025) {
+                    if(rangegood.size() != 0) {
+                        for(Station good:rangegood) {
+                            if(disttobad > euclidDist(pos, good.getCorrdinate()))
+                                return true;
+                        }
+                    }
+                    return false;
+                }
+                    
+            }
+        }
+        return true;
 
+    }
     public static boolean inRange(Position currpos, Station s) {
         double x1 = currpos.getLatitude() + 0.00025;
         double x2 = currpos.getLatitude() - 0.00025;
@@ -129,4 +149,7 @@ public abstract class Drone {
     }
 
     public abstract ArrayList<String> play();
+    public static void main(String[] args) {
+        System.out.println(euclidDist(new Position(55.945232251759506,-3.192076731913386),new Position(55.945117446729796,-3.1923538957731394)));
+    }
 }

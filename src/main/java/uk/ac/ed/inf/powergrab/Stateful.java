@@ -8,17 +8,21 @@ import java.util.Random;
 public class Stateful extends Drone {
     private Random rnd;
     private ArrayList<Station> badStations;
+    private ArrayList<Station> goodStations;
     private final GreedyPath greedypath;
 
     public Stateful(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
         super(position, droneType, stations);
         this.rnd = rnd;
         badStations = new ArrayList<>();
+        this.goodStations = new ArrayList<>();
         for (Station each : this.stations) {
             if (each.getSymbol() == Station.Symbol.DANGER)
                 badStations.add(each);
+            if (each.getSymbol() == Station.Symbol.LIGHTHOUSE)
+                goodStations.add(each);
         }
-        this.greedypath = new GreedyPath(this.badStations);
+        this.greedypath = new GreedyPath(this.badStations,this.goodStations);
     }
 
     public Station findNearest(ArrayList<Station> sts, Position dp) {
@@ -47,46 +51,53 @@ public class Stateful extends Drone {
         return stl.play();
     }
 
+    public void moveRandomly() {
+        while (true) {
+            Direction d = Direction.values()[rnd.nextInt(16)];
+            Position nextpos = this.position.nextPosition(d);
+            if(nextpos.inPlayArea() && Drone.canReach(nextpos, badStations,goodStations) ) {
+                move(d);
+                break;
+            }
+        }
+      }
+
     @Override
     public ArrayList<String> play() {
         ArrayList<String> res = new ArrayList<>();
         ArrayList<Station> remaingood = new ArrayList<>();
-        ArrayList<Station> again = new ArrayList<>();
         this.stations.forEach(s -> {
             if (s.getSymbol() == Station.Symbol.LIGHTHOUSE)
                 remaingood.add(s);
         });
         while (true) {
-            if (remaingood.size() == 0 && again.size() != 0) {
-                remaingood.clear();
-                remaingood.addAll(again);
-                again.clear();
-            }
-            if (remaingood.size() == 0 && again.size() == 0) {
+            if (remaingood.size() == 0) {
                 break;
             }
             Station nearest = findNearest(remaingood, this.position);
             ArrayList<Position> ressss = greedypath.findPath(this.position, nearest);
-            if(ressss == null) {
+            if (ressss == null) {
                 remaingood.remove(nearest);
                 continue;
             }
             if (ressss.size() <= 1) {
-                remaingood.remove(nearest);
-                again.add(nearest);
+                moveRandomly();
                 continue;
             }
-            Collections.reverse(ressss);         
+            Collections.reverse(ressss);
             for (int i = 0; i < ressss.size() - 1; i++) {
                 Direction dir = Position.nextDirection(ressss.get(i), ressss.get(i + 1));
-                statefulMove(ressss.get(i + 1));           
+                move(dir);
                 if (i == ressss.size() - 2) {
-                    String s = String.format("%s,%s,%s,%s,%s", ressss.get(i), dir, ressss.get(i + 1), this.remainCoins,this.remainPower);
+                    String s = String.format("%s,%s,%s,%s,%s", ressss.get(i), dir, ressss.get(i + 1), this.remainCoins,
+                            this.remainPower);
                     charge(nearest);
                     res.add(s);
-                }else {
-                String s = String.format("%s,%s,%s,%s,%s", ressss.get(i), dir, ressss.get(i + 1), this.remainCoins,this.remainPower);
-                    res.add(s);}
+                } else {
+                    String s = String.format("%s,%s,%s,%s,%s", ressss.get(i), dir, ressss.get(i + 1), this.remainCoins,
+                            this.remainPower);
+                    res.add(s);
+                }
                 if (!this.gameStatus)
                     break;
             }

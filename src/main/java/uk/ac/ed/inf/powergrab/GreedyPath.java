@@ -8,17 +8,18 @@ import java.util.List;
 
 public class GreedyPath {
     private ArrayList<Station> bad;
+    private ArrayList<Station> good;
 
-    public GreedyPath(ArrayList<Station> bad) {
+    public GreedyPath(ArrayList<Station> bad ,ArrayList<Station> good) {
         this.bad = bad;
-        
+        this.good = good;
     }
 
     public ArrayList<ArrayList<Position>> findNeighbors(ArrayList<Position> poss) {
         ArrayList<ArrayList<Position>> res = new ArrayList<>();
         List<Direction> dirs = Arrays.asList(Direction.values());
         dirs.forEach(d -> {
-            if (canReach(poss.get(0).nextPosition(d))) {
+            if (Drone.canReach(poss.get(0).nextPosition(d),this.bad,this.good)) {
                 ArrayList<Position> temp = new ArrayList<Position>(poss);
                 temp.add(0,poss.get(0).nextPosition(d));
                 res.add(temp);
@@ -27,23 +28,7 @@ public class GreedyPath {
         return res;
     }
 
-    public boolean canReach(Position pos) {
-        if (!pos.inPlayArea())
-            return false;
-        ArrayList<Station> rangebad = new ArrayList<>();
-        bad.forEach(s -> {
-            if (Drone.inRange(pos, s))
-                rangebad.add(s);
-        });
-        if (rangebad.size() != 0) {
-            for (Station each : rangebad) {
-                if (Drone.euclidDist(pos, each.getCorrdinate()) <= 0.00025)
-                    return false;
-            }
-        }
-        return true;
-
-    }
+    
     public double hValue(Position x, Position y) {
         return Drone.euclidDist(x, y);
     }
