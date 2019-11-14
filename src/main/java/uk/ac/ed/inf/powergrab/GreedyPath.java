@@ -7,8 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GreedyPath {
-    private ArrayList<Station> bad;
-    private ArrayList<Station> good;
+    private final ArrayList<Station> bad;
+    private final ArrayList<Station> good;
 
     public GreedyPath(ArrayList<Station> bad ,ArrayList<Station> good) {
         this.bad = bad;
@@ -28,7 +28,7 @@ public class GreedyPath {
         return res;
     }
 
-    
+
     public double hValue(Position x, Position y) {
         return Drone.euclidDist(x, y);
     }
@@ -74,7 +74,7 @@ public class GreedyPath {
                     else if(h0-h1 > 0) return 1;
                     else return 0;
                 }
-                
+
             });
             return find(s,rest,explored);
         }
@@ -87,5 +87,5 @@ public class GreedyPath {
         ArrayList<Position> explored = new ArrayList<>();
         return find(s,init,explored);
     }
-    
+
 }

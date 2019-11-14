@@ -8,7 +8,18 @@ import java.util.Random;
 import com.mapbox.geojson.*;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class PlayPowergrab.
+ */
 public class PlayPowergrab {
+
+    /**
+     * Gets the points.
+     *
+     * @param input the input
+     * @return the points
+     */
     public static ArrayList<Point> getPoints(ArrayList<String> input){
         ArrayList<Point> res = new ArrayList<>();
         for(int i = 0 ; i < input.size()-1;i++) {
@@ -22,6 +33,14 @@ public class PlayPowergrab {
         }
         return res;
     }
+
+    /**
+     * Gets the new geo json.
+     *
+     * @param fc the fc
+     * @param input the input
+     * @return the new geo json
+     */
     public static String getNewGeoJson(FeatureCollection fc,ArrayList<Point> input) {
         LineString ls = LineString.fromLngLats(input);
         Feature f = Feature.fromGeometry(ls);
@@ -30,9 +49,14 @@ public class PlayPowergrab {
         FeatureCollection fcc = FeatureCollection.fromFeatures(temp);
         return fcc.toJson();
     }
+
+    /**
+     * The main method.
+     *
+     * @param args the arguments
+     */
     public static void main(String[] args){
         try {
-            
             String link = String.format("http://homepages.inf.ed.ac.uk/stg/powergrab/%s/%s/%s/powergrabmap.geojson",
                     args[2], args[1], args[0]);
             URL url = new URL(link);
@@ -43,34 +67,28 @@ public class PlayPowergrab {
             Position initpos = new Position(Double.parseDouble(args[3]),Double.parseDouble(args[4]));
             if(args[6].equals("stateless")) {
                 drone = new Stateless(initpos,Drone.DroneType.STATELESS,map.getStations(),rnd);
-            }else {
+            }else if(args[6].equals("stateful")) {
                 drone = new Stateful(initpos,Drone.DroneType.STATEFUL,map.getStations(),rnd);
             }
-            //long st = System.currentTimeMillis();
-            ArrayList<Station> sts = new ArrayList<>();
-            for(Station s : map.getStations()) {
-                if(s.getSymbol() == Station.Symbol.LIGHTHOUSE) sts.add(s);
-            }
+            else {
+                System.out.println("Invalid drone type.");
+                return;}
             ArrayList<String> res = drone.play();
             ArrayList<Point> points = getPoints(res);
-            String strs = getNewGeoJson(map.getFc(),points);
+            String geojsonmap = getNewGeoJson(map.getFc(),points);
             StringBuilder sb = new StringBuilder();
-            //long end = System.currentTimeMillis();
             for(String each : res) {
                 sb.append(each);
-                sb.append("\n"); 
+                sb.append("\n");
             }
-            
             FileOutputStream outputStream = new FileOutputStream(String.format("%s-%s-%s-%s.txt",args[6],args[0],args[1],args[2]));
             byte[] strToBytes = sb.toString().getBytes();
             outputStream.write(strToBytes);
             FileOutputStream outputStream2 = new FileOutputStream(String.format("%s-%s-%s-%s.geojson",args[6],args[0],args[1],args[2]));
-            byte[] strToBytes2 = strs.toString().getBytes();
+            byte[] strToBytes2 = geojsonmap.toString().getBytes();
             outputStream2.write(strToBytes2);
             outputStream.close();
             outputStream2.close();
-            //System.out.println(end-st);
-            
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }

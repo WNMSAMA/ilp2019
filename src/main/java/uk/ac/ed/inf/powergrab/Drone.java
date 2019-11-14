@@ -1,78 +1,35 @@
 package uk.ac.ed.inf.powergrab;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public abstract class Drone {
     protected Position position;
     protected double remainCoins;
     protected double remainPower;
     protected int remainSteps;
-    protected ArrayList<Station> stations;
+    protected final Random rnd;
+    protected final ArrayList<Station> stations;
 
     public enum DroneType {
         STATEFUL, STATELESS
     }
 
-    protected DroneType droneType;
+    protected final DroneType droneType;
     protected boolean gameStatus;
 
-    public Drone(Position position, DroneType droneType, ArrayList<Station> stations) {
+    public Drone(Position position, DroneType droneType, ArrayList<Station> stations , Random rnd) {
         this.position = position;
         this.droneType = droneType;
         this.stations = stations;
+        this.rnd = rnd;
         this.gameStatus = true;
         this.remainCoins = 0;
         this.remainPower = 250;
         this.remainSteps = 250;
     }
 
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
-    public double getRemainCoins() {
-        return remainCoins;
-    }
-
-    public void setRemainCoins(double remainCoins) {
-        this.remainCoins = remainCoins;
-    }
-
-    public double getRemainPower() {
-        return remainPower;
-    }
-
-    public void setRemainPower(double remainPower) {
-        this.remainPower = remainPower;
-    }
-
-    public int getRemainSteps() {
-        return remainSteps;
-    }
-
-    public void setRemainSteps(int remainSteps) {
-        this.remainSteps = remainSteps;
-    }
-
-    public DroneType getDroneType() {
-        return droneType;
-    }
-
-    public void setDroneType(DroneType droneType) {
-        this.droneType = droneType;
-    }
-
-    public boolean isGameStatus() {
-        return gameStatus;
-    }
-
-    public void setGameStatus(boolean gameStatus) {
-        this.gameStatus = gameStatus;
-    }
+    public abstract ArrayList<String> play();
 
     public void move(Direction d) {
         this.position = this.position.nextPosition(d);
@@ -131,7 +88,7 @@ public abstract class Drone {
                     }
                     return false;
                 }
-                    
+
             }
         }
         return true;
@@ -146,10 +103,5 @@ public abstract class Drone {
                 && s.getCorrdinate().getLongitude() <= y1 && s.getCorrdinate().getLongitude() >= y2)
             return true;
         return false;
-    }
-
-    public abstract ArrayList<String> play();
-    public static void main(String[] args) {
-        System.out.println(euclidDist(new Position(55.945232251759506,-3.192076731913386),new Position(55.945117446729796,-3.1923538957731394)));
     }
 }

@@ -35,40 +35,40 @@ public class Position {
 
     public Position nextPosition(Direction direction) {
         switch (direction) {
-        case N:
-            return new Position(this.latitude + dist, this.longitude);
-        case E:
-            return new Position(this.latitude, this.longitude + dist);
-        case W:
-            return new Position(this.latitude, this.longitude - dist);
-        case S:
-            return new Position(this.latitude - dist, this.longitude);
-        case NW:
-            return new Position(this.latitude + dist45deg, this.longitude - dist45deg);
-        case NE:
-            return new Position(this.latitude + dist45deg, this.longitude + dist45deg);
-        case SW:
-            return new Position(this.latitude - dist45deg, this.longitude - dist45deg);
-        case SE:
-            return new Position(this.latitude - dist45deg, this.longitude + dist45deg);
-        case WNW:
-            return new Position(this.latitude + short225, this.longitude - long225);
-        case NNW:
-            return new Position(this.latitude + long225, this.longitude - short225);
-        case NNE:
-            return new Position(this.latitude + long225, this.longitude + short225);
-        case ENE:
-            return new Position(this.latitude + short225, this.longitude + long225);
-        case ESE:
-            return new Position(this.latitude - short225, this.longitude + long225);
-        case SSE:
-            return new Position(this.latitude - long225, this.longitude + short225);
-        case SSW:
-            return new Position(this.latitude - long225, this.longitude - short225);
-        case WSW:
-            return new Position(this.latitude - short225, this.longitude - long225);
-        default:
-            return null;
+            case N:
+                return new Position(this.latitude + dist, this.longitude);
+            case E:
+                return new Position(this.latitude, this.longitude + dist);
+            case W:
+                return new Position(this.latitude, this.longitude - dist);
+            case S:
+                return new Position(this.latitude - dist, this.longitude);
+            case NW:
+                return new Position(this.latitude + dist45deg, this.longitude - dist45deg);
+            case NE:
+                return new Position(this.latitude + dist45deg, this.longitude + dist45deg);
+            case SW:
+                return new Position(this.latitude - dist45deg, this.longitude - dist45deg);
+            case SE:
+                return new Position(this.latitude - dist45deg, this.longitude + dist45deg);
+            case WNW:
+                return new Position(this.latitude + short225, this.longitude - long225);
+            case NNW:
+                return new Position(this.latitude + long225, this.longitude - short225);
+            case NNE:
+                return new Position(this.latitude + long225, this.longitude + short225);
+            case ENE:
+                return new Position(this.latitude + short225, this.longitude + long225);
+            case ESE:
+                return new Position(this.latitude - short225, this.longitude + long225);
+            case SSE:
+                return new Position(this.latitude - long225, this.longitude + short225);
+            case SSW:
+                return new Position(this.latitude - long225, this.longitude - short225);
+            case WSW:
+                return new Position(this.latitude - short225, this.longitude - long225);
+            default:
+                return null;
         }
     }
 

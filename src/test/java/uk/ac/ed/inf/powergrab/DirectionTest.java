@@ -12,7 +12,7 @@ public class DirectionTest extends TestCase{
         return new TestSuite(DirectionTest.class);
     }
     final Position p0 = new Position(55.944425, -3.188396);
-    
+
     public void testDirN() {
         assertTrue(Position.nextDirection(p0,new Position(55.944725000000005,-3.188396)) == Direction.N);
     }
@@ -63,7 +63,7 @@ public class DirectionTest extends TestCase{
     }
     public static void main(String[] args) {
         Position p0 = new Position(55.944425, -3.188396);
-        
+
         System.out.println(p0.nextPosition(Direction.NW));
     }
 }

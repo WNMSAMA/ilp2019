@@ -9,26 +9,26 @@ import com.mapbox.geojson.*;
 
 public class LoadMap {
     private FeatureCollection fc;
-    private ArrayList<Station> stations;
+    private final ArrayList<Station> stations;
 
     @SuppressWarnings("resource")
     public LoadMap(URL mapURL) throws java.io.IOException {
         this.stations = new ArrayList<>();
         HttpURLConnection huc = (HttpURLConnection) mapURL.openConnection();
-        huc.setReadTimeout(10000); 
-        huc.setConnectTimeout(15000); 
+        huc.setReadTimeout(10000);
+        huc.setConnectTimeout(15000);
         huc.setRequestMethod("GET");
         huc.setDoInput(true);
         huc.connect();
         InputStream is = huc.getInputStream();
         Scanner s = new Scanner(is).useDelimiter("\\A");
         String str = s.hasNext() ? s.next() : "";
-        this.fc = FeatureCollection.fromJson(str);  
+        this.fc = FeatureCollection.fromJson(str);
     }
     public ArrayList<Station> getStations(){
         return this.stations;
     }
-    
+
     public FeatureCollection getFc() {
         return fc;
     }

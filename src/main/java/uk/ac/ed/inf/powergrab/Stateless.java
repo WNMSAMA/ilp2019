@@ -4,20 +4,32 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.TreeMap;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Stateless.
+ */
 public class Stateless extends Drone {
-    private Random rnd;
 
+    /**
+     * Instantiates a new stateless.
+     *
+     * @param position the position
+     * @param droneType the drone type
+     * @param stations the stations
+     * @param rnd the rnd
+     */
     public Stateless(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
-        super(position, droneType, stations);
-        this.rnd = rnd;
+        super(position, droneType, stations,rnd);
     }
 
+    /* (non-Javadoc)
+     * @see uk.ac.ed.inf.powergrab.Drone#play()
+     */
     @Override
     public ArrayList<String> play() {
         ArrayList<String> res = new ArrayList<>();
         while (true) {
             if (!this.gameStatus) {
-                // res.add("Game over. Remaining coins " + this.remainCoins);
                 break;
             }
             StringBuilder sb = new StringBuilder("");
@@ -40,9 +52,9 @@ public class Stateless extends Drone {
                 Station nearest = this.stations.get(nearstts.firstEntry().getValue());
                 if (nearest.getSymbol() == Station.Symbol.LIGHTHOUSE && nearstts.firstEntry().getKey() <= 0.00025) {
                     move(d);
-                    if (!this.gameStatus)
-                        break;                       
                     charge(nearest);
+                    if (!this.gameStatus)
+                        break;
                     nextdir = d;
                     break;
                 }
@@ -57,7 +69,7 @@ public class Stateless extends Drone {
                     if(dangers.contains(nextdir) || !this.position.nextPosition(nextdir).inPlayArea()) continue;
                     move(nextdir);
                     break;
-                    
+
                 }
             }
 
@@ -71,8 +83,14 @@ public class Stateless extends Drone {
         return res;
     }
 
-    
 
+
+    /**
+     * Save and sort.
+     *
+     * @param pos the pos
+     * @return the tree map
+     */
     public TreeMap<Double, Integer> saveAndSort(Position pos) {
         TreeMap<Double, Integer> dists = new TreeMap<>();
         int idx = 0;

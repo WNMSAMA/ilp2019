@@ -6,14 +6,12 @@ import java.util.Comparator;
 import java.util.Random;
 
 public class Stateful extends Drone {
-    private Random rnd;
-    private ArrayList<Station> badStations;
-    private ArrayList<Station> goodStations;
+    private final ArrayList<Station> badStations;
+    private final ArrayList<Station> goodStations;
     private final GreedyPath greedypath;
 
     public Stateful(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
-        super(position, droneType, stations);
-        this.rnd = rnd;
+        super(position, droneType, stations,rnd);
         badStations = new ArrayList<>();
         this.goodStations = new ArrayList<>();
         for (Station each : this.stations) {
@@ -51,16 +49,15 @@ public class Stateful extends Drone {
         return stl.play();
     }
 
-    public void moveRandomly() {
+    public Direction moveRandomly() {
         while (true) {
             Direction d = Direction.values()[rnd.nextInt(16)];
             Position nextpos = this.position.nextPosition(d);
             if(nextpos.inPlayArea() && Drone.canReach(nextpos, badStations,goodStations) ) {
-                move(d);
-                break;
+                return d;
             }
         }
-      }
+    }
 
     @Override
     public ArrayList<String> play() {
@@ -81,7 +78,12 @@ public class Stateful extends Drone {
                 continue;
             }
             if (ressss.size() <= 1) {
-                moveRandomly();
+                Direction d = moveRandomly();
+                Position prev = this.position;
+                move(d);
+                String s = String.format("%s,%s,%s,%s,%s", prev, d, this.position, this.remainCoins,
+                        this.remainPower);
+                res.add(s);
                 continue;
             }
             Collections.reverse(ressss);
@@ -89,9 +91,9 @@ public class Stateful extends Drone {
                 Direction dir = Position.nextDirection(ressss.get(i), ressss.get(i + 1));
                 move(dir);
                 if (i == ressss.size() - 2) {
+                    charge(nearest);
                     String s = String.format("%s,%s,%s,%s,%s", ressss.get(i), dir, ressss.get(i + 1), this.remainCoins,
                             this.remainPower);
-                    charge(nearest);
                     res.add(s);
                 } else {
                     String s = String.format("%s,%s,%s,%s,%s", ressss.get(i), dir, ressss.get(i + 1), this.remainCoins,
