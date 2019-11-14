@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.powergrab;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
@@ -41,7 +42,7 @@ public class PlayPowergrab {
      * @param input the input
      * @return the new geo json
      */
-    public static String getNewGeoJson(FeatureCollection fc,ArrayList<Point> input) {
+    public static String getNewGeoJson(FeatureCollection fc,ArrayList<Point> input) throws java.lang.NullPointerException{
         LineString ls = LineString.fromLngLats(input);
         Feature f = Feature.fromGeometry(ls);
         ArrayList<Feature> temp = new ArrayList<>(fc.features());
@@ -85,11 +86,11 @@ public class PlayPowergrab {
             byte[] strToBytes = sb.toString().getBytes();
             outputStream.write(strToBytes);
             FileOutputStream outputStream2 = new FileOutputStream(String.format("%s-%s-%s-%s.geojson",args[6],args[0],args[1],args[2]));
-            byte[] strToBytes2 = geojsonmap.toString().getBytes();
+            byte[] strToBytes2 = geojsonmap.getBytes();
             outputStream2.write(strToBytes2);
             outputStream.close();
             outputStream2.close();
-        } catch (java.io.IOException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
     }

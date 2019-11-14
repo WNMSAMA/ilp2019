@@ -2,8 +2,6 @@ package uk.ac.ed.inf.powergrab;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class GreedyPath {
@@ -20,7 +18,7 @@ public class GreedyPath {
         List<Direction> dirs = Arrays.asList(Direction.values());
         dirs.forEach(d -> {
             if (Drone.canReach(poss.get(0).nextPosition(d),this.bad,this.good)) {
-                ArrayList<Position> temp = new ArrayList<Position>(poss);
+                ArrayList<Position> temp = new ArrayList<>(poss);
                 temp.add(0,poss.get(0).nextPosition(d));
                 res.add(temp);
             }
@@ -64,17 +62,12 @@ public class GreedyPath {
             ArrayList<ArrayList<Position>> next = findNeighbors(track);
             next.forEach(arrs -> rest.add(0,arrs));
             explored.add(track.get(0));
-            Collections.sort(rest,new Comparator<ArrayList<Position>>() {
-
-                @Override
-                public int compare(ArrayList<Position> arg0, ArrayList<Position> arg1) {
-                    double h0 = hValue(arg0.get(0),s.getCorrdinate());
-                    double h1 = hValue(arg1.get(0),s.getCorrdinate());
-                    if(h0-h1 < 0) return -1;
-                    else if(h0-h1 > 0) return 1;
-                    else return 0;
-                }
-
+            rest.sort((arg0, arg1) -> {
+                double h0 = hValue(arg0.get(0), s.getCorrdinate());
+                double h1 = hValue(arg1.get(0), s.getCorrdinate());
+                if (h0 - h1 < 0) return -1;
+                else if (h0 - h1 > 0) return 1;
+                else return 0;
             });
             return find(s,rest,explored);
         }

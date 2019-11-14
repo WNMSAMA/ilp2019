@@ -74,16 +74,13 @@ public class Position {
 
     public boolean inPlayArea() {
         if (this.latitude < 55.946233 && this.latitude > 55.942617) {
-            if (this.longitude < -3.184319 && this.longitude > -3.192473)
-                return true;
+            return this.longitude < -3.184319 && this.longitude > -3.192473;
         }
         return false;
     }
 
     public static boolean isEqu(double x, double y) {
-        if (Math.abs(x - y) <= 1.0E-12d)
-            return true;
-        return false;
+        return Math.abs(x - y) <= 1.0E-12d;
     }
 
     public static Direction nextDirection(Position prev, Position next) {

@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.TreeMap;
 
 // TODO: Auto-generated Javadoc
+
 /**
  * The Class Stateless.
  */
@@ -13,13 +14,13 @@ public class Stateless extends Drone {
     /**
      * Instantiates a new stateless.
      *
-     * @param position the position
+     * @param position  the position
      * @param droneType the drone type
-     * @param stations the stations
-     * @param rnd the rnd
+     * @param stations  the stations
+     * @param rnd       the rnd
      */
     public Stateless(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
-        super(position, droneType, stations,rnd);
+        super(position, droneType, stations, rnd);
     }
 
     /* (non-Javadoc)
@@ -28,15 +29,9 @@ public class Stateless extends Drone {
     @Override
     public ArrayList<String> play() {
         ArrayList<String> res = new ArrayList<>();
-        while (true) {
-            if (!this.gameStatus) {
-                break;
-            }
-            StringBuilder sb = new StringBuilder("");
-            sb.append(this.position.getLatitude());
-            sb.append(",");
-            sb.append(this.position.getLongitude());
-            sb.append(",");
+        while (this.gameStatus) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(this.position.getLatitude()).append(",").append(this.position.getLongitude()).append(",");
             Direction nextdir = null;
             int flag = 0;
             ArrayList<Direction> dangers = new ArrayList<>();
@@ -45,7 +40,7 @@ public class Stateless extends Drone {
                 if (!pos.inPlayArea())
                     continue;
                 TreeMap<Double, Integer> nearstts = saveAndSort(pos);
-                if(nearstts.size() == 0) {
+                if (nearstts.size() == 0) {
                     continue;
                 }
                 flag = 1;
@@ -58,7 +53,7 @@ public class Stateless extends Drone {
                     nextdir = d;
                     break;
                 }
-                if(nearest.getSymbol() == Station.Symbol.DANGER && nearstts.firstEntry().getKey() <= 0.00025) {
+                if (nearest.getSymbol() == Station.Symbol.DANGER && nearstts.firstEntry().getKey() <= 0.00025) {
                     dangers.add(d);
                 }
                 flag = 0;
@@ -66,23 +61,17 @@ public class Stateless extends Drone {
             if (flag == 0) {
                 while (true) {
                     nextdir = Direction.values()[rnd.nextInt(16)];
-                    if(dangers.contains(nextdir) || !this.position.nextPosition(nextdir).inPlayArea()) continue;
+                    if (dangers.contains(nextdir) || !this.position.nextPosition(nextdir).inPlayArea()) continue;
                     move(nextdir);
                     break;
 
                 }
             }
-
-            sb.append(nextdir + ",");
-            sb.append(this.position.getLatitude() + ",");
-            sb.append(this.position.getLongitude() + ",");
-            sb.append(this.remainCoins + ",");
-            sb.append(this.remainPower);
+            sb.append(nextdir).append(",").append(this.position.getLatitude()).append(",").append(this.position.getLongitude()).append(",").append(this.remainCoins).append(",").append(this.remainPower);
             res.add(sb.toString());
         }
         return res;
     }
-
 
 
     /**

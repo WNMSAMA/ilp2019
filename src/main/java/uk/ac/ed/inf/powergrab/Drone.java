@@ -99,9 +99,7 @@ public abstract class Drone {
         double x2 = currpos.getLatitude() - 0.00025;
         double y1 = currpos.getLongitude() + 0.00025;
         double y2 = currpos.getLongitude() - 0.00025;
-        if (s.getCorrdinate().getLatitude() <= x1 && s.getCorrdinate().getLatitude() >= x2
-                && s.getCorrdinate().getLongitude() <= y1 && s.getCorrdinate().getLongitude() >= y2)
-            return true;
-        return false;
+        return s.getCorrdinate().getLatitude() <= x1 && s.getCorrdinate().getLatitude() >= x2
+                && s.getCorrdinate().getLongitude() <= y1 && s.getCorrdinate().getLongitude() >= y2;
     }
 }

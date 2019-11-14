@@ -2,7 +2,6 @@ package uk.ac.ed.inf.powergrab;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Random;
 
 public class Stateful extends Drone {
@@ -24,19 +23,14 @@ public class Stateful extends Drone {
     }
 
     public Station findNearest(ArrayList<Station> sts, Position dp) {
-        Collections.sort(sts, new Comparator<Station>() {
-
-            @Override
-            public int compare(Station o1, Station o2) {
-                Position p1 = o1.getCorrdinate();
-                Position p2 = o2.getCorrdinate();
-                double res1 = Drone.euclidDist(dp, p1);
-                double res2 = Drone.euclidDist(dp, p2);
-                if (res1 == res2)
-                    return 0;
-                return res1 < res2 ? -1 : 1;
-            }
-
+        sts.sort((s1, s2) -> {
+            Position p1 = s1.getCorrdinate();
+            Position p2 = s2.getCorrdinate();
+            double res1 = Drone.euclidDist(dp, p1);
+            double res2 = Drone.euclidDist(dp, p2);
+            if (res1 == res2)
+                return 0;
+            return res1 < res2 ? -1 : 1;
         });
         return sts.get(0);
     }
@@ -67,10 +61,7 @@ public class Stateful extends Drone {
             if (s.getSymbol() == Station.Symbol.LIGHTHOUSE)
                 remaingood.add(s);
         });
-        while (true) {
-            if (remaingood.size() == 0) {
-                break;
-            }
+        while (remaingood.size() != 0) {
             Station nearest = findNearest(remaingood, this.position);
             ArrayList<Position> ressss = greedypath.findPath(this.position, nearest);
             if (ressss == null) {
@@ -103,7 +94,6 @@ public class Stateful extends Drone {
                 if (!this.gameStatus)
                     break;
             }
-
             remaingood.remove(nearest);
         }
         if (this.remainSteps != 0) {
