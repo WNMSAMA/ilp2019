@@ -16,6 +16,9 @@ public class Station {
         this.symbol = symbol;
         this.position = position;
     }
+    public String getId(){
+        return this.id;
+    }
     public double getCoins() {
         return coins;
     }

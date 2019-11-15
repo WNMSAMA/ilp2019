@@ -10,7 +10,7 @@ public class Stateful extends Drone {
     private final GreedyPath greedypath;
 
     public Stateful(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
-        super(position, droneType, stations,rnd);
+        super(position, droneType, stations, rnd);
         badStations = new ArrayList<>();
         this.goodStations = new ArrayList<>();
         for (Station each : this.stations) {
@@ -19,20 +19,7 @@ public class Stateful extends Drone {
             if (each.getSymbol() == Station.Symbol.LIGHTHOUSE)
                 goodStations.add(each);
         }
-        this.greedypath = new GreedyPath(this.badStations,this.goodStations);
-    }
-
-    public Station findNearest(ArrayList<Station> sts, Position dp) {
-        sts.sort((s1, s2) -> {
-            Position p1 = s1.getCorrdinate();
-            Position p2 = s2.getCorrdinate();
-            double res1 = Drone.euclidDist(dp, p1);
-            double res2 = Drone.euclidDist(dp, p2);
-            if (res1 == res2)
-                return 0;
-            return res1 < res2 ? -1 : 1;
-        });
-        return sts.get(0);
+        this.greedypath = new GreedyPath(this.badStations, this.goodStations);
     }
 
     public ArrayList<String> goStateless(Stateful drone) {
@@ -47,7 +34,7 @@ public class Stateful extends Drone {
         while (true) {
             Direction d = Direction.values()[rnd.nextInt(16)];
             Position nextpos = this.position.nextPosition(d);
-            if(nextpos.inPlayArea() && Drone.canReach(nextpos, badStations,goodStations) ) {
+            if (nextpos.inPlayArea() && Drone.canReach(nextpos, badStations, goodStations)) {
                 return d;
             }
         }
@@ -62,9 +49,14 @@ public class Stateful extends Drone {
                 remaingood.add(s);
         });
         while (remaingood.size() != 0) {
+            int b;
             Station nearest = findNearest(remaingood, this.position);
             ArrayList<Position> ressss = greedypath.findPath(this.position, nearest);
             if (ressss == null) {
+                remaingood.remove(nearest);
+                continue;
+            }
+            if(nearest.getCoins() == 0){
                 remaingood.remove(nearest);
                 continue;
             }
@@ -72,6 +64,7 @@ public class Stateful extends Drone {
                 Direction d = moveRandomly();
                 Position prev = this.position;
                 move(d);
+                charge();
                 String s = String.format("%s,%s,%s,%s,%s", prev, d, this.position, this.remainCoins,
                         this.remainPower);
                 res.add(s);
@@ -81,16 +74,10 @@ public class Stateful extends Drone {
             for (int i = 0; i < ressss.size() - 1; i++) {
                 Direction dir = Position.nextDirection(ressss.get(i), ressss.get(i + 1));
                 move(dir);
-                if (i == ressss.size() - 2) {
-                    charge(nearest);
-                    String s = String.format("%s,%s,%s,%s,%s", ressss.get(i), dir, ressss.get(i + 1), this.remainCoins,
-                            this.remainPower);
-                    res.add(s);
-                } else {
-                    String s = String.format("%s,%s,%s,%s,%s", ressss.get(i), dir, ressss.get(i + 1), this.remainCoins,
-                            this.remainPower);
-                    res.add(s);
-                }
+                charge();
+                String s = String.format("%s,%s,%s,%s,%s", ressss.get(i), dir, ressss.get(i + 1), this.remainCoins,
+                        this.remainPower);
+                res.add(s);
                 if (!this.gameStatus)
                     break;
             }

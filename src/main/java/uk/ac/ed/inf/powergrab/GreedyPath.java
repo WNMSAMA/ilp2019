@@ -38,7 +38,8 @@ public class GreedyPath {
         return false;
     }
     public boolean checkArrival(Position pos,Station s) {
-        return Drone.euclidDist(pos, s.getCorrdinate()) <= 0.00025;
+        Station nearest = Stateful.findNearest(this.good,pos);
+        return (Drone.euclidDist(pos, s.getCorrdinate()) <= 0.00025) && (nearest.getId().equals(s.getId()));
     }
     public ArrayList<Position> find(Station s,ArrayList<ArrayList<Position>> open , ArrayList<Position> explored){
         if(open.size() == 0) return null;
