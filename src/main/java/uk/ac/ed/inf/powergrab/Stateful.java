@@ -35,11 +35,11 @@ public class Stateful extends Drone {
         return sts.get(0);
     }
 
-    public ArrayList<String> goStateless(Stateful sd) {
-        Stateless stl = new Stateless(position, Drone.DroneType.STATELESS, badStations, rnd);
-        stl.remainCoins = this.remainCoins;
-        stl.remainPower = this.remainPower;
-        stl.remainSteps = this.remainSteps;
+    public ArrayList<String> goStateless(Stateful drone) {
+        Stateless stl = new Stateless(drone.position, Drone.DroneType.STATELESS, drone.badStations, drone.rnd);
+        stl.remainCoins = drone.remainCoins;
+        stl.remainPower = drone.remainPower;
+        stl.remainSteps = drone.remainSteps;
         return stl.play();
     }
 
