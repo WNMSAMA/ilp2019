@@ -21,7 +21,7 @@ public class PlayPowergrab {
      * @param input the input
      * @return the points
      */
-    public static ArrayList<Point> getPoints(ArrayList<String> input){
+    private static ArrayList<Point> getPoints(ArrayList<String> input){
         ArrayList<Point> res = new ArrayList<>();
         for(int i = 0 ; i < input.size()-1;i++) {
             String[] temp = input.get(i).split(",");
@@ -42,7 +42,7 @@ public class PlayPowergrab {
      * @param input the input
      * @return the new geo json
      */
-    public static String getNewGeoJson(FeatureCollection fc,ArrayList<Point> input) throws java.lang.NullPointerException{
+    private static String getNewGeoJson(FeatureCollection fc, ArrayList<Point> input) throws java.lang.NullPointerException{
         LineString ls = LineString.fromLngLats(input);
         Feature f = Feature.fromGeometry(ls);
         ArrayList<Feature> temp = new ArrayList<>(fc.features());
