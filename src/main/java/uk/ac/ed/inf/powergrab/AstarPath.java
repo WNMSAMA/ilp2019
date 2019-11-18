@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GreedyPath {
+public class AstarPath {
     private final ArrayList<Station> bad;
     private final ArrayList<Station> good;
 
-    public GreedyPath(ArrayList<Station> bad ,ArrayList<Station> good) {
+    public AstarPath(ArrayList<Station> bad ,ArrayList<Station> good) {
         this.bad = bad;
         this.good = good;
     }

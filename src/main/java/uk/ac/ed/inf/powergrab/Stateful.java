@@ -7,7 +7,7 @@ import java.util.Random;
 public class Stateful extends Drone {
     private final ArrayList<Station> badStations;
     private final ArrayList<Station> goodStations;
-    private final GreedyPath greedypath;
+    private final AstarPath astarpath;
 
     public Stateful(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
         super(position, droneType, stations, rnd);
@@ -19,7 +19,7 @@ public class Stateful extends Drone {
             if (each.getSymbol() == Station.Symbol.LIGHTHOUSE)
                 goodStations.add(each);
         }
-        this.greedypath = new GreedyPath(this.badStations, this.goodStations);
+        this.astarpath = new AstarPath(this.badStations, this.goodStations);
     }
 
     public ArrayList<String> goStateless(Stateful drone) {
@@ -51,7 +51,7 @@ public class Stateful extends Drone {
         while (remaingood.size() != 0) {
             int b;
             Station nearest = findNearest(remaingood, this.position);
-            ArrayList<Position> ressss = greedypath.findPath(this.position, nearest);
+            ArrayList<Position> ressss = astarpath.findPath(this.position, nearest);
             if (ressss == null) {
                 remaingood.remove(nearest);
                 continue;
