@@ -13,7 +13,7 @@ public class AstarPath {
         this.good = good;
     }
 
-    public ArrayList<ArrayList<Position>> findNeighbors(ArrayList<Position> poss) {
+    private ArrayList<ArrayList<Position>> findNeighbors(ArrayList<Position> poss) {
         ArrayList<ArrayList<Position>> res = new ArrayList<>();
         List<Direction> dirs = Arrays.asList(Direction.values());
         dirs.forEach(d -> {
@@ -27,20 +27,20 @@ public class AstarPath {
     }
 
 
-    public double hValue(Position x, Position y) {
+    private double hValue(Position x, Position y) {
         return Drone.euclidDist(x, y);
     }
-    public double cost(ArrayList<Position> poss) {
+    private double cost(ArrayList<Position> poss) {
         return poss.size() * 0.000125;
     }
-    public boolean checkInExplored(ArrayList<Position> explored,Position p) {
+    private boolean checkInExplored(ArrayList<Position> explored, Position p) {
         for(Position pos : explored) {
             if(Math.abs(pos.getLatitude()-p.getLatitude()) <= 1.0E-12d && Math.abs(pos.getLongitude()-p.getLongitude()) <= 1.0E-12d)
                 return true;
         }
         return false;
     }
-    public boolean checkArrival(Position pos,Station s) {
+    private boolean checkArrival(Position pos, Station s) {
         Station nearest = Stateful.findNearest(this.good,pos);
         return (Drone.euclidDist(pos, s.getCorrdinate()) <= 0.00025) && (nearest.getId().equals(s.getId()));
     }
@@ -49,7 +49,6 @@ public class AstarPath {
         ArrayList<ArrayList<Position>> open = new ArrayList<>();
         ArrayList<Position> explored = new ArrayList<>();
         ArrayList<Position> init = new ArrayList<>();
-        ArrayList<Position> res = new ArrayList<>();
         init.add(start);
         open.add(init);
         while (open.size() != 0) {
@@ -68,7 +67,6 @@ public class AstarPath {
             } else if (checkInExplored(explored, track.get(0)) || b) {
                 open.clear();
                 open.addAll(rest);
-                continue;
             } else {
                 ArrayList<ArrayList<Position>> next = findNeighbors(track);
                 next.forEach(arrs -> rest.add(0, arrs));
@@ -82,7 +80,6 @@ public class AstarPath {
                 });
                 open.clear();
                 open.addAll(rest);
-                continue;
             }
         }
         return null;
