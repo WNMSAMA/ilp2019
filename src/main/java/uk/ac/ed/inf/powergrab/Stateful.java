@@ -22,7 +22,7 @@ public class Stateful extends Drone {
         this.astarpath = new AstarPath(this.badStations, this.goodStations);
     }
 
-    public ArrayList<String> goStateless(Stateful drone) {
+    private ArrayList<String> goStateless(Stateful drone) {
         Stateless stl = new Stateless(drone.position, Drone.DroneType.STATELESS, drone.badStations, drone.rnd);
         stl.remainCoins = drone.remainCoins;
         stl.remainPower = drone.remainPower;
@@ -30,7 +30,7 @@ public class Stateful extends Drone {
         return stl.play();
     }
 
-    public Direction moveRandomly() {
+    private Direction moveRandomly() {
         while (true) {
             Direction d = Direction.values()[rnd.nextInt(16)];
             Position nextpos = this.position.nextPosition(d);

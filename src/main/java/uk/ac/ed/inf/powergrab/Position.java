@@ -21,16 +21,8 @@ public class Position {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
     public double getLongitude() {
         return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
     }
 
     public Position nextPosition(Direction direction) {
@@ -79,7 +71,7 @@ public class Position {
         return false;
     }
 
-    public static boolean isEqu(double x, double y) {
+    private static boolean isEqu(double x, double y) {
         return Math.abs(x - y) <= 1.0E-12d;
     }
 

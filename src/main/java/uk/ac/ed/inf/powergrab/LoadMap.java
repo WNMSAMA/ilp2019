@@ -32,9 +32,7 @@ public class LoadMap {
     public FeatureCollection getFc() {
         return fc;
     }
-    public void setFc(FeatureCollection fc) {
-        this.fc = fc;
-    }
+
     public void saveStations() throws  java.lang.NullPointerException{
         for (Feature each : this.fc.features()) {
             String id = each.getProperty("id").getAsString();

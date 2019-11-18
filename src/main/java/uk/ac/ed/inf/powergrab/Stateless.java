@@ -81,7 +81,7 @@ public class Stateless extends Drone {
      * @param pos the pos
      * @return the tree map
      */
-    public TreeMap<Double, Integer> saveAndSort(Position pos) {
+    private TreeMap<Double, Integer> saveAndSort(Position pos) {
         TreeMap<Double, Integer> dists = new TreeMap<>();
         int idx = 0;
         for (Station each : this.stations) {

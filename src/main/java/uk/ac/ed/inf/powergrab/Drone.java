@@ -1,7 +1,6 @@
 package uk.ac.ed.inf.powergrab;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Random;
 
 public abstract class Drone {
@@ -78,22 +77,6 @@ public abstract class Drone {
         double sq2 = Math.pow(x.getLongitude() - y.getLongitude(), 2);
         return Math.sqrt(sq1 + sq2);
     }
-    /*public static Station getNearestStation(Position pos, ArrayList<Station> stations){
-        ArrayList<Station> nearstts = new ArrayList<>();
-        stations.forEach(station -> {
-            if (inRange(pos, station)) nearstts.add(station);
-        });
-        if (nearstts.size() != 0) {
-            nearstts.sort((s0, s1) -> {
-                double d1 = euclidDist(s0.getCorrdinate(), pos);
-                double d2 = euclidDist(s1.getCorrdinate(), pos);
-                if (d1 == d2) return 0;
-                return d1 < d2 ? -1 : 1;
-            });
-        }
-        if(nearstts.size() == 0) return null;
-        return nearstts.get(0);
-    }*/
 
     public static boolean canReach(Position pos, ArrayList<Station> badStations, ArrayList<Station> goodStations) {
         if (!pos.inPlayArea())
