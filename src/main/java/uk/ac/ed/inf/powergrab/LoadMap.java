@@ -7,10 +7,18 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import com.mapbox.geojson.*;
 
+/**
+ * @author s1703367
+ */
 public class LoadMap {
     private FeatureCollection fc;
     private final ArrayList<Station> stations;
 
+    /**
+     * The constructor will initialise the FeatureCollection to the .geojson file get from the URL connection.
+     * @param mapURL The URL of the .geojson file.
+     * @throws java.io.IOException
+     */
     @SuppressWarnings("resource")
     public LoadMap(URL mapURL) throws java.io.IOException {
         this.stations = new ArrayList<>();
@@ -33,6 +41,12 @@ public class LoadMap {
         return fc;
     }
 
+    /**
+     * The method will get all features of a station and construct a Station class.
+     * Then save all Station to an ArrayList.
+     *
+     * @throws java.lang.NullPointerException
+     */
     public void saveStations() throws  java.lang.NullPointerException{
         for (Feature each : this.fc.features()) {
             String id = each.getProperty("id").getAsString();

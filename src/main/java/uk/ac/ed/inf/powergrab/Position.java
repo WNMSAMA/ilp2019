@@ -1,5 +1,8 @@
 package uk.ac.ed.inf.powergrab;
 
+/**
+ * @author s1703367
+ */
 public class Position {
     public double latitude;
     public double longitude;
@@ -25,6 +28,11 @@ public class Position {
         return longitude;
     }
 
+    /**
+     * This method will return next position of the drone when it makes a move in the specified compass direction
+     * @param direction The direction which the drone is moving at.
+     * @return The position after the move.
+     */
     public Position nextPosition(Direction direction) {
         switch (direction) {
             case N:
@@ -64,6 +72,10 @@ public class Position {
         }
     }
 
+    /**
+     * Check if the drone is in play area.
+     * @return true if in play area.
+     */
     public boolean inPlayArea() {
         if (this.latitude < 55.946233 && this.latitude > 55.942617) {
             return this.longitude < -3.184319 && this.longitude > -3.192473;
@@ -71,10 +83,18 @@ public class Position {
         return false;
     }
 
-    private static boolean isEqu(double x, double y) {
-        return Math.abs(x - y) <= 1.0E-12d;
+    private static boolean isEqu(double a, double b) {
+        //return Math.abs(a - b) <= 1.0E-12d;
+        return Double.compare(a,b) == 0;
     }
 
+    /**
+     * Given two positions, this method will return the direction which the drone is moving.
+     *
+     * @param prev The previous position of the drone.
+     * @param next The next position of the drone.
+     * @return The direction which the drone is moving.
+     */
     public static Direction nextDirection(Position prev, Position next) {
         double x = next.longitude - prev.longitude;
         double y = next.latitude - prev.latitude;
@@ -110,6 +130,7 @@ public class Position {
             return Direction.SSW;
         if (isEqu(x, -long225) && isEqu(y, -short225))
             return Direction.WSW;
+        System.out.println("None");
         return null;
     }
 

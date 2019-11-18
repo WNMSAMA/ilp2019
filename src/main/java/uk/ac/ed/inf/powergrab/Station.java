@@ -1,5 +1,8 @@
 package uk.ac.ed.inf.powergrab;
 
+/**
+ * @author s1703367
+ */
 public class Station {
     private final String id;
     private double coins;
@@ -9,6 +12,15 @@ public class Station {
     }
     private Symbol symbol;
     private final Position position;
+
+    /**
+     * The constructor of Station
+     * @param id ID of a station.
+     * @param coins Initial coins in a station
+     * @param power Initial power in a station
+     * @param symbol The symbol of a station.
+     * @param position The position of a station.
+     */
     public Station(String id, double coins , double power,Symbol symbol,Position position) {
         this.id = id;
         this.coins = coins;
@@ -16,6 +28,8 @@ public class Station {
         this.symbol = symbol;
         this.position = position;
     }
+
+    //getter and setters.
     public String getId(){
         return this.id;
     }

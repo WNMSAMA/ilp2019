@@ -8,18 +8,18 @@ import java.util.Random;
 
 import com.mapbox.geojson.*;
 
-
-// TODO: Auto-generated Javadoc
 /**
- * The Class PlayPowergrab.
+ * @author s1703367
  */
 public class PlayPowergrab {
-
     /**
-     * Gets the points.
+     * This method takes the output of a drone's track.
+     * e.g.
+     * 55.944212867965646,-3.1881838679656442,NW,55.944425,-3.188396,63.775421544612854,247.8231837318418
+     * Then picks the position of each move and store them in an ArrayList.
      *
-     * @param input the input
-     * @return the points
+     * @param input This is the returned ArrayList from Drone.play() method which in required output format.
+     * @return An ArrayList of Point(Geojson).
      */
     private static ArrayList<Point> getPoints(ArrayList<String> input){
         ArrayList<Point> res = new ArrayList<>();
@@ -36,11 +36,13 @@ public class PlayPowergrab {
     }
 
     /**
-     * Gets the new geo json.
+     * This method takes a FeatureCollection and add LineString Feature to it.
+     * The LineString is constructed by the out put of getPoints() method.()
      *
-     * @param fc the fc
-     * @param input the input
-     * @return the new geo json
+     * @param fc The old FeatureCollection which need to add a LineString Feature.
+     * @param input The ArrayList of Point
+     * @return A String in Geojson style.
+     * @throws java.lang.NullPointerException
      */
     private static String getNewGeoJson(FeatureCollection fc, ArrayList<Point> input) throws java.lang.NullPointerException{
         LineString ls = LineString.fromLngLats(input);
@@ -52,9 +54,8 @@ public class PlayPowergrab {
     }
 
     /**
-     * The main method.
-     *
-     * @param args the arguments
+     *The main function used to output files.
+     * @param args The console inputs.
      */
     public static void main(String[] args){
         try {
