@@ -84,8 +84,8 @@ public class Position {
     }
 
     private static boolean isEqu(double a, double b) {
-        //return Math.abs(a - b) <= 1.0E-12d;
-        return Double.compare(a,b) == 0;
+        return Math.abs(a - b) <= 1.0E-12d;
+        //return Double.compare(a,b) == 0;
     }
 
     /**
