@@ -30,6 +30,9 @@ public class GreedyPath {
     public double hValue(Position x, Position y) {
         return Drone.euclidDist(x, y);
     }
+    public double cost(ArrayList<Position> poss) {
+        return poss.size() * 0.000125;
+    }
     public boolean checkInExplored(ArrayList<Position> explored,Position p) {
         for(Position pos : explored) {
             if(Math.abs(pos.getLatitude()-p.getLatitude()) <= 1.0E-12d && Math.abs(pos.getLongitude()-p.getLongitude()) <= 1.0E-12d)
@@ -41,45 +44,48 @@ public class GreedyPath {
         Station nearest = Stateful.findNearest(this.good,pos);
         return (Drone.euclidDist(pos, s.getCorrdinate()) <= 0.00025) && (nearest.getId().equals(s.getId()));
     }
-    public ArrayList<Position> find(Station s,ArrayList<ArrayList<Position>> open , ArrayList<Position> explored){
-        if(open.size() == 0) return null;
-        ArrayList<Position> track = open.get(0);
-        ArrayList<ArrayList<Position>> rest = new ArrayList<>(open);
-        rest.remove(0);
-        boolean b = false;
-        for(ArrayList<Position> each : rest) {
-            if(each.contains(track.get(0))) {
-                b=true;
-                break;
+
+    public ArrayList<Position> findPath(Position start,Station s){
+        ArrayList<ArrayList<Position>> open = new ArrayList<>();
+        ArrayList<Position> explored = new ArrayList<>();
+        ArrayList<Position> init = new ArrayList<>();
+        ArrayList<Position> res = new ArrayList<>();
+        init.add(start);
+        open.add(init);
+        while (open.size() != 0) {
+            ArrayList<Position> track = open.get(0);
+            ArrayList<ArrayList<Position>> rest = new ArrayList<>(open);
+            rest.remove(0);
+            boolean b = false;
+            for (ArrayList<Position> each : rest) {
+                if (each.contains(track.get(0))) {
+                    b = true;
+                    break;
+                }
+            }
+            if (checkArrival(track.get(0), s)) {
+                return track;
+            } else if (checkInExplored(explored, track.get(0)) || b) {
+                open.clear();
+                open.addAll(rest);
+                continue;
+            } else {
+                ArrayList<ArrayList<Position>> next = findNeighbors(track);
+                next.forEach(arrs -> rest.add(0, arrs));
+                explored.add(track.get(0));
+                rest.sort((arg0, arg1) -> {
+                    double h0 = hValue(arg0.get(0), s.getCorrdinate())+ cost(arg0);
+                    double h1 = hValue(arg1.get(0), s.getCorrdinate())+ cost(arg1);
+                    if (h0 - h1 < 0) return -1;
+                    else if (h0 - h1 > 0) return 1;
+                    else return 0;
+                });
+                open.clear();
+                open.addAll(rest);
+                continue;
             }
         }
-        if(checkArrival(track.get(0),s)) {
-            return track;
-        }
-        else if(checkInExplored(explored,track.get(0)) || b) {
-            return find(s,rest,explored);
-        }
-        else {
-            ArrayList<ArrayList<Position>> next = findNeighbors(track);
-            next.forEach(arrs -> rest.add(0,arrs));
-            explored.add(track.get(0));
-            rest.sort((arg0, arg1) -> {
-                double h0 = hValue(arg0.get(0), s.getCorrdinate());
-                double h1 = hValue(arg1.get(0), s.getCorrdinate());
-                if (h0 - h1 < 0) return -1;
-                else if (h0 - h1 > 0) return 1;
-                else return 0;
-            });
-            return find(s,rest,explored);
-        }
-    }
-    public ArrayList<Position> findPath(Position start, Station s) {
-        ArrayList<ArrayList<Position>> init = new ArrayList<>();
-        ArrayList<Position> initt = new ArrayList<>();
-        initt.add(start);
-        init.add(initt);
-        ArrayList<Position> explored = new ArrayList<>();
-        return find(s,init,explored);
+        return null;
     }
 
 }
