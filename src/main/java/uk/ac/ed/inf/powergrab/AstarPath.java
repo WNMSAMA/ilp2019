@@ -22,8 +22,8 @@ public class AstarPath {
     }
 
     /**
-     * This method takes an input path, return an ArrayList of paths,the first position of each path is the next valid position
-     * where the drone can move to.
+     * This method takes an input path, return an ArrayList of paths,
+     * the first position of each path is the next valid position where the drone can move to.
      * @param poss A path(ArrayList of positions)
      * @return An ArrayList of paths.
      */
@@ -88,7 +88,8 @@ public class AstarPath {
     }
 
     /**
-     * This method will return an ArrayList of Position, which is the best path from start position to destination station.
+     * This method will return an ArrayList of Position,
+     * which is the shortest path from start position to destination station.
      * Using A star searching strategy.
      *
      * @param start Start position.
