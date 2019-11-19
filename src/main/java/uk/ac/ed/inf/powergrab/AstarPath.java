@@ -107,22 +107,24 @@ public class AstarPath {
             ArrayList<ArrayList<Position>> rest = new ArrayList<>(open);
             rest.remove(0);
             boolean b = false;
+            // Check if the current node is already in other branches.
             for (ArrayList<Position> each : rest) {
                 if (each.contains(track.get(0))) {
                     b = true;
                     break;
                 }
             }
-            if (checkArrival(track.get(0), s)) {
+            if (checkArrival(track.get(0), s)) {// If arrives, return the best track.
                 return track;
             } else if (checkInExplored(explored, track.get(0)) || b) {
+                //if the node is explored or already in other path, remove it.
                 open.clear();
                 open.addAll(rest);
             } else {
                 ArrayList<ArrayList<Position>> next = findNeighbors(track);
                 next.forEach(arrs -> rest.add(0, arrs));
-                explored.add(track.get(0));
-                rest.sort((arg0, arg1) -> {
+                explored.add(track.get(0));//add current node to the explored list.
+                rest.sort((arg0, arg1) -> {// sort by total cost.
                     double f0 = hValue(arg0.get(0), s.getCorrdinate())+ cost(arg0);
                     double f1 = hValue(arg1.get(0), s.getCorrdinate())+ cost(arg1);
                     if (f0 - f1 < 0) return -1;
