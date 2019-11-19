@@ -60,7 +60,6 @@ public class PlayPowergrab {
      */
     public static void main(String[] args){
         try {
-            double f1 = System.currentTimeMillis();
             if(args.length != 7) throw new java.lang.IllegalArgumentException("Invalid length of input values!");
             String link = String.format("http://homepages.inf.ed.ac.uk/stg/powergrab/%s/%s/%s/powergrabmap.geojson",
                     args[2], args[1], args[0]);
@@ -93,8 +92,6 @@ public class PlayPowergrab {
             outputStream2.write(strToBytes2);
             outputStream.close();
             outputStream2.close();
-            double f2 = System.currentTimeMillis();
-            System.out.println(f2-f1);
         } catch(java.lang.NumberFormatException e){
             System.out.println("Input longitude or latitude or random seed is not a number.");
             e.printStackTrace();
