@@ -43,7 +43,6 @@ public class Stateless extends Drone {
                     dangers.add(d);
                     continue;
                 }
-                ArrayList<Station> nearests = new ArrayList<>();
                 Station nearest = findNearest(this.goodStations,pos);
                 if(nearest != null && euclidDist(nearest.getCorrdinate(),pos)<= CHARGE_RANGE
                     && nearest.getSymbol() == Station.Symbol.LIGHTHOUSE ){
