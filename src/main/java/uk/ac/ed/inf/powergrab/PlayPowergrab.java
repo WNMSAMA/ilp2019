@@ -45,7 +45,8 @@ public class PlayPowergrab {
      * @return A String in Geojson style.
      * @throws java.lang.NullPointerException
      */
-    private static String getNewGeoJson(FeatureCollection fc, ArrayList<Point> input) throws java.lang.NullPointerException{
+    private static String getNewGeoJson(FeatureCollection fc, ArrayList<Point> input)
+            throws java.lang.NullPointerException{
         LineString ls = LineString.fromLngLats(input);
         Feature f = Feature.fromGeometry(ls);
         ArrayList<Feature> temp = new ArrayList<>(fc.features());
@@ -84,10 +85,12 @@ public class PlayPowergrab {
                 sb.append(each);
                 sb.append("\n");
             }
-            FileOutputStream outputStream = (new FileOutputStream(String.format("%s-%s-%s-%s.txt",args[6],args[0],args[1],args[2])));
+            FileOutputStream outputStream = (new FileOutputStream(
+                    String.format("%s-%s-%s-%s.txt",args[6],args[0],args[1],args[2])));
             byte[] strToBytes = sb.toString().getBytes();
             outputStream.write(strToBytes);
-            FileOutputStream outputStream2 = (new FileOutputStream(String.format("%s-%s-%s-%s.geojson",args[6],args[0],args[1],args[2])));
+            FileOutputStream outputStream2 = (new FileOutputStream(
+                    String.format("%s-%s-%s-%s.geojson",args[6],args[0],args[1],args[2])));
             byte[] strToBytes2 = geojsonmap.getBytes();
             outputStream2.write(strToBytes2);
             outputStream.close();
