@@ -85,7 +85,6 @@ public class Position {
 
     private static boolean isEqu(double a, double b) {
         return Math.abs(a - b) <= 1.0E-12d;
-        //return Double.compare(a,b) == 0;
     }
 
     /**
@@ -130,7 +129,6 @@ public class Position {
             return Direction.SSW;
         if (isEqu(x, -long225) && isEqu(y, -short225))
             return Direction.WSW;
-        System.out.println("None");
         return null;
     }
 
