@@ -45,8 +45,7 @@ public class PlayPowergrab {
      * @return A String in Geojson style.
      * @throws java.lang.NullPointerException
      */
-    private static String getNewGeoJson(FeatureCollection fc, ArrayList<Point> input)
-            throws java.lang.NullPointerException{
+    private static String getNewGeoJson(FeatureCollection fc, ArrayList<Point> input){
         LineString ls = LineString.fromLngLats(input);
         Feature f = Feature.fromGeometry(ls);
         ArrayList<Feature> temp = new ArrayList<>(fc.features());
