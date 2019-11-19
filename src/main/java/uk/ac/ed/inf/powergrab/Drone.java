@@ -99,8 +99,8 @@ public abstract class Drone {
      *  This method let the drone charge at the nearest station(If the drone is in the range of the Station).
      *  If no station is in range, doing nothing.
      *  If the station has positive power and coin, the drone will gain all the power and coin,the Station
-     *  will have 0 power and 0 coins in it. If a Station has negative power and coin, the drone will lose
-     *  some power and coins.
+     *  will have 0 power and 0 coins remain. If a Station has negative power and coin, the drone will lose
+     *  power and coins.
      *
      */
     public void charge() {
@@ -142,7 +142,7 @@ public abstract class Drone {
     /**
      * This method returns a boolean value indicates whether a position the drone can reach.
      * The method will return false when the input position is not in play area.
-     * If the drone is going to charge at a DANGER station at the input position(closer to DANGER than LIGHTHOUSE),
+     * If the drone is going to charge at a DANGER station at the input position(The drone is closer to DANGER than LIGHTHOUSE),
      * return false.
      *
      * @param pos The position where the drone is going to.
