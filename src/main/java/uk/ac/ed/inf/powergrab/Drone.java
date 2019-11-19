@@ -13,9 +13,10 @@ public abstract class Drone {
     protected int remainSteps;
     protected final Random rnd;
     protected final ArrayList<Station> stations;
-    protected static final double CHARGE_RANGE = 0.00025;
     protected final ArrayList<Station> badStations;
     protected final ArrayList<Station> goodStations;
+    protected static final double CHARGE_RANGE = 0.00025;
+
     public enum DroneType {
         STATEFUL, STATELESS
     }
@@ -25,6 +26,9 @@ public abstract class Drone {
 
     /**
      * This is the constructor of the Drone class
+     * Initialize the parameters.
+     * Initialize coins to 0, power and steps to 250.
+     * Separate Danger and LIGHTHOUSE.
      *
      * @param position The initial position.
      * @param droneType The type of the drone.
@@ -54,7 +58,7 @@ public abstract class Drone {
      * The abstract function will apply different strategy on different type of the drone.
      *
      * @return An ArrayList of String, each String is in the output format.
-     * (like 55.944212867965646,-3.1881838679656442,NW,55.944425,-3.188396,63.775421544612854,247.8231837318418)
+     * format =  55.944212867965646,-3.1881838679656442,NW,55.944425,-3.188396,63.775421544612854,247.8231837318418
      *
      */
     public abstract ArrayList<String> play();
