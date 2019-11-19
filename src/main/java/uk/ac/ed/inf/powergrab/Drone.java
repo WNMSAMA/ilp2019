@@ -14,7 +14,8 @@ public abstract class Drone {
     protected final Random rnd;
     protected final ArrayList<Station> stations;
     protected static final double CHARGE_RANGE = 0.00025;
-
+    protected final ArrayList<Station> badStations;
+    protected final ArrayList<Station> goodStations;
     public enum DroneType {
         STATEFUL, STATELESS
     }
@@ -39,18 +40,28 @@ public abstract class Drone {
         this.remainCoins = 0;
         this.remainPower = 250;
         this.remainSteps = 250;
+        this.goodStations = new ArrayList<>();
+        this.badStations = new ArrayList<>();
+        for (Station each : this.stations) {// Separate all lighthouses and dangers.
+            if (each.getSymbol() == Station.Symbol.DANGER)
+                badStations.add(each);
+            if (each.getSymbol() == Station.Symbol.LIGHTHOUSE || each.getSymbol() == Station.Symbol.DEAD)
+                goodStations.add(each);
+        }
     }
 
     /**
      * The abstract function will apply different strategy on different type of the drone.
      *
-     * @return An ArrayList of String, each String is in the output format.(like 55.944212867965646,-3.1881838679656442,NW,55.944425,-3.188396,63.775421544612854,247.8231837318418)
+     * @return An ArrayList of String, each String is in the output format.
+     * (like 55.944212867965646,-3.1881838679656442,NW,55.944425,-3.188396,63.775421544612854,247.8231837318418)
      *
      */
     public abstract ArrayList<String> play();
 
     /**
-     * The method which will move the drone in the give direction.Move consumes the drone power and will reduce the remainsteps by 1.
+     * The method which will move the drone in the give direction.
+     * Move consumes the drone power and will reduce the remainsteps by 1.
      *
      * @param d The direction of the next move of the drone.
      */
@@ -59,7 +70,6 @@ public abstract class Drone {
         this.remainPower -= 1.25;
         this.remainSteps -= 1;
         if (this.remainSteps == 0 || this.remainPower <= 0){
-            this.remainPower = 0;
             this.gameStatus = false;
         }
     }
@@ -72,6 +82,7 @@ public abstract class Drone {
      * @return The Station which is closest to the current position.
      */
     public static Station findNearest(ArrayList<Station> sts, Position dp) {
+        if(sts.size() == 0) return null;
         sts.sort((s1, s2) -> {//First sort Stations by distance to the drone
             Position p1 = s1.getCorrdinate();
             Position p2 = s2.getCorrdinate();
@@ -131,38 +142,40 @@ public abstract class Drone {
     /**
      * This method returns a boolean value indicates whether a position the drone can reach.
      * The method will return false when the input position is not in play area.
-     * If the drone is going to charge at a DANGER station at the input position(closer to DANGER than LIGHTHOUSE), return false.
+     * If the drone is going to charge at a DANGER station at the input position(closer to DANGER than LIGHTHOUSE),
+     * return false.
      *
      * @param pos The position where the drone is going to.
-     * @param badStations ArrayList of Station with initial label DANGER
-     * @param goodStations ArrayList of Station with initial label LIGHTHOUSE
+     * @param badstations ArrayList of Station with initial label DANGER
+     * @param goodstations ArrayList of Station with initial label LIGHTHOUSE
      * @return boolean value indicates whether the move is valid.
      */
-    public static boolean canReach(Position pos, ArrayList<Station> badStations, ArrayList<Station> goodStations) {
+    public static boolean canReach(Position pos, ArrayList<Station> badstations, ArrayList<Station> goodstations) {
         if (!pos.inPlayArea())
             return false;
         ArrayList<Station> rangebad = new ArrayList<>();
         ArrayList<Station> rangegood = new ArrayList<>();
-        badStations.forEach(s -> {
+        badstations.forEach(s -> {
             if (inRange(pos, s))
                 rangebad.add(s);
         });//get all bad stations which are roughly in the charge range to reduce computation cost.
-        goodStations.forEach(s -> {
+        goodstations.forEach(s -> {
             if (inRange(pos, s))
                 rangegood.add(s);
         });//get all good stations which are roughly in the charge range to reduce computation cost.
         if (rangebad.size() != 0) {//If no bad stations in range, return true.
-            for (Station each : rangebad) {
-                double disttobad = euclidDist(pos, each.getCorrdinate());
+            Station bad = findNearest(badstations,pos);
+                double disttobad = euclidDist(pos, bad.getCorrdinate());
                 if (disttobad <= CHARGE_RANGE) {
                     if (rangegood.size() != 0) {
-                        for (Station good : rangegood) {
-                            if (disttobad > euclidDist(pos, good.getCorrdinate()))// If a good station is closer than a bad station, return true.
+                        for (Station good : rangegood) {// If a good station is closer than a bad station, return true.
+                            double disttogood = euclidDist(pos, good.getCorrdinate());
+                            if (disttobad > disttogood)
                                 return true;
-                        }
+
                     }
-                    return false;//else return false.
-                }
+
+                }return false;//else return false.
 
             }
         }
@@ -173,13 +186,13 @@ public abstract class Drone {
     /**
      * Check if a station is roughly in range of a station
      * If a station is in the square area below, return true.
-     *           0.00025
+     *           0.0005
      *         -----------
      *         |         |
-     * 0.00025 |    D    |0.00025
+     * 0.0005  |    D    | 0.0005
      *         |         |
      *         -----------
-     *           0.00025
+     *           0.0005
      * @param currpos current position of the drone.
      * @param s The station needs to be checked.
      * @return boolean value indicates whether the station is in the range.

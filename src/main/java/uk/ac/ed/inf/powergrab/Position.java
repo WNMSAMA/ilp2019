@@ -4,8 +4,8 @@ package uk.ac.ed.inf.powergrab;
  * @author s1703367
  */
 public class Position {
-    public double latitude;
-    public double longitude;
+    private double latitude;
+    private double longitude;
     // the straight-line distance of each travel.
     private static final double dist = 0.0003;
     // the x-axis and y-axis displacement when travel in NW NE SW SE

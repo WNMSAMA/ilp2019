@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.powergrab;
 
+import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -23,7 +24,7 @@ public class PlayPowergrab {
      */
     private static ArrayList<Point> getPoints(ArrayList<String> input){
         ArrayList<Point> res = new ArrayList<>();
-        for(int i = 0 ; i < input.size()-1;i++) {
+        for(int i = 0 ; i < input.size();i++) {
             String[] temp = input.get(i).split(",");
             if(i == 0) {
                 Point p = Point.fromLngLat(Double.parseDouble(temp[1]), Double.parseDouble(temp[0]));
@@ -59,6 +60,8 @@ public class PlayPowergrab {
      */
     public static void main(String[] args){
         try {
+            double f1 = System.currentTimeMillis();
+            if(args.length != 7) throw new java.lang.IllegalArgumentException("Invalid length of input values!");
             String link = String.format("http://homepages.inf.ed.ac.uk/stg/powergrab/%s/%s/%s/powergrabmap.geojson",
                     args[2], args[1], args[0]);
             URL url = new URL(link);
@@ -72,9 +75,8 @@ public class PlayPowergrab {
             }else if(args[6].equals("stateful")) {
                 drone = new Stateful(initpos,Drone.DroneType.STATEFUL,map.getStations(),rnd);
             }
-            else {
-                System.out.println("Invalid drone type.");
-                return;}
+            else
+                throw new java.lang.IllegalArgumentException("Invalid drone type.");
             ArrayList<String> res = drone.play();
             ArrayList<Point> points = getPoints(res);
             String geojsonmap = getNewGeoJson(map.getFc(),points);
@@ -83,15 +85,23 @@ public class PlayPowergrab {
                 sb.append(each);
                 sb.append("\n");
             }
-            FileOutputStream outputStream = new FileOutputStream(String.format("%s-%s-%s-%s.txt",args[6],args[0],args[1],args[2]));
+            FileOutputStream outputStream = (new FileOutputStream(String.format("%s-%s-%s-%s.txt",args[6],args[0],args[1],args[2])));
             byte[] strToBytes = sb.toString().getBytes();
             outputStream.write(strToBytes);
-            FileOutputStream outputStream2 = new FileOutputStream(String.format("%s-%s-%s-%s.geojson",args[6],args[0],args[1],args[2]));
+            FileOutputStream outputStream2 = (new FileOutputStream(String.format("%s-%s-%s-%s.geojson",args[6],args[0],args[1],args[2])));
             byte[] strToBytes2 = geojsonmap.getBytes();
             outputStream2.write(strToBytes2);
             outputStream.close();
             outputStream2.close();
-        } catch (IOException | NullPointerException e) {
+            double f2 = System.currentTimeMillis();
+            System.out.println(f2-f1);
+        } catch(java.lang.NumberFormatException e){
+            System.out.println("Input longitude or latitude or random seed is not a number.");
+            e.printStackTrace();
+        } catch(java.io.FileNotFoundException e){
+            System.out.println("Input map cannot be found!");
+            e.printStackTrace();
+        }catch (Exception e) {
             e.printStackTrace();
         }
     }

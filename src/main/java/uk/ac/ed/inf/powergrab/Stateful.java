@@ -8,8 +8,6 @@ import java.util.Random;
  * @author s1703367
  */
 public class Stateful extends Drone {
-    private final ArrayList<Station> badStations;
-    private final ArrayList<Station> goodStations;
     private final AstarPath astarpath;
 
     /**
@@ -22,24 +20,17 @@ public class Stateful extends Drone {
      */
     public Stateful(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
         super(position, droneType, stations, rnd);
-        badStations = new ArrayList<>();
-        this.goodStations = new ArrayList<>();
-        for (Station each : this.stations) {// Separate all lighthouses and dangers.
-            if (each.getSymbol() == Station.Symbol.DANGER)
-                badStations.add(each);
-            if (each.getSymbol() == Station.Symbol.LIGHTHOUSE)
-                goodStations.add(each);
-        }
         this.astarpath = new AstarPath(this.badStations, this.goodStations);// initialize the path finder.
     }
 
     /**
-     * This method will let the stateful drone move randomly(behaves as a stateless drone) after all reachable lighthouses have been visited.
+     * This method will let the stateful drone move randomly(behaves as a stateless drone)
+     * after all reachable lighthouses have been visited.
      *
      * @return An ArrayList of String , each String is in required output format.
      */
     private ArrayList<String> goStateless() {
-        Stateless stl = new Stateless(this.position, Drone.DroneType.STATELESS, this.badStations, this.rnd);
+        Stateless stl = new Stateless(this.position, Drone.DroneType.STATELESS, this.stations, this.rnd);
         stl.remainCoins = this.remainCoins;
         stl.remainPower = this.remainPower;
         stl.remainSteps = this.remainSteps;
@@ -64,7 +55,8 @@ public class Stateful extends Drone {
     /**
      * This method uses an Greedy search strategy to find the next Station.
      * The drone will always looks for the closest station after each successful charge.
-     * Then calls the path finder with Astar search strategy to find a path from current position to the destination Station.
+     * Then calls the path finder with Astar search strategy to find a path from current position
+     * to the destination Station.
      * After all LIGHTHOUSES have been visited, the drone just move randomly until the end of the game.
      *
      * @return An ArrayList of String, each String is in required output format.
@@ -80,7 +72,8 @@ public class Stateful extends Drone {
                 remaingood.remove(nearest);
                 continue;
             }
-            if(nearest.getCoins() == 0){//If a good station has been charged after a random move, search for next station.
+            if(nearest.getCoins() == 0){
+                //If a good station has been charged after a random move, search for next station.
                 remaingood.remove(nearest);
                 continue;
             }
@@ -96,7 +89,8 @@ public class Stateful extends Drone {
                     break;
                 continue;
             }
-            Collections.reverse(path);//Reverse the order of the path(since the A star algorithm back tracks the point to get a track.)
+            Collections.reverse(path);
+            //Reverse the order of the path(since the A star algorithm back tracks the point to get a track.)
             for (int i = 0; i < path.size() - 1; i++) {
                 Direction dir = Position.nextDirection(path.get(i), path.get(i + 1));//move the drone by the track given.
                 move(dir);
