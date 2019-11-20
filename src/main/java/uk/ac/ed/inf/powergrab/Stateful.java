@@ -64,7 +64,7 @@ public class Stateful extends Drone {
      * @return An ArrayList of String, each String is in required output format.
      */
     @Override
-    public ArrayList<String> play() {
+    protected ArrayList<String> play() {
         ArrayList<String> res = new ArrayList<>();
         ArrayList<Station> remaingood = new ArrayList<>(this.goodStations);
         while (remaingood.size() != 0) {// If all good stations have been visited, break the loop.

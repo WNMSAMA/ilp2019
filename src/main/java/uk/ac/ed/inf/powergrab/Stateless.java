@@ -29,7 +29,7 @@ public class Stateless extends Drone {
      * @return An ArrayList of String, each String is in required output format.
      */
     @Override
-    public ArrayList<String> play() {
+    protected ArrayList<String> play() {
         ArrayList<String> res = new ArrayList<>();
         while (this.gameStatus) {// If game is over, break the loop.
             StringBuilder sb = new StringBuilder();// create an string builder to store the current step's output.
