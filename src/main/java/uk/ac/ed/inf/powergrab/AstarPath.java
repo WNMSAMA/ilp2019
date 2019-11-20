@@ -6,8 +6,9 @@ import java.util.List;
 
 /**
  * @author s1703367
+ * @since 2019-11-02
  */
-public class AstarPath {
+class AstarPath {
     private final ArrayList<Station> bad;
     private final ArrayList<Station> good;
 
@@ -16,7 +17,7 @@ public class AstarPath {
      * @param bad Danger stations.
      * @param good Lighthouse stations.
      */
-    public AstarPath(ArrayList<Station> bad ,ArrayList<Station> good) {
+    AstarPath(ArrayList<Station> bad, ArrayList<Station> good) {
         this.bad = bad;
         this.good = good;
     }
@@ -96,7 +97,7 @@ public class AstarPath {
      * @param s Destination station.
      * @return Best path of the drone.
      */
-    public ArrayList<Position> findPath(Position start,Station s){
+    ArrayList<Position> findPath(Position start, Station s){
         ArrayList<ArrayList<Position>> open = new ArrayList<>();
         ArrayList<Position> explored = new ArrayList<>();
         ArrayList<Position> init = new ArrayList<>();

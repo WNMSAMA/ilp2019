@@ -2,6 +2,7 @@ package uk.ac.ed.inf.powergrab;
 
 /**
  * @author s1703367
+ * @since 2019-09-23
  */
 public class Position {
     private double latitude;
@@ -20,11 +21,11 @@ public class Position {
         this.longitude = longitude;
     }
 
-    public double getLatitude() {
+    double getLatitude() {
         return latitude;
     }
 
-    public double getLongitude() {
+    double getLongitude() {
         return longitude;
     }
 
@@ -33,7 +34,7 @@ public class Position {
      * @param direction The direction which the drone is moving at.
      * @return The position after the move.
      */
-    public Position nextPosition(Direction direction) {
+    Position nextPosition(Direction direction) {
         switch (direction) {
             case N:
                 return new Position(this.latitude + dist, this.longitude);
@@ -76,7 +77,7 @@ public class Position {
      * Check if the drone is in play area.
      * @return true if in play area.
      */
-    public boolean inPlayArea() {
+    boolean inPlayArea() {
         if (this.latitude < 55.946233 && this.latitude > 55.942617) {
             return this.longitude < -3.184319 && this.longitude > -3.192473;
         }
@@ -94,7 +95,7 @@ public class Position {
      * @param next The next position of the drone.
      * @return The direction which the drone is moving.
      */
-    public static Direction nextDirection(Position prev, Position next) {
+    static Direction nextDirection(Position prev, Position next) {
         double x = next.longitude - prev.longitude;
         double y = next.latitude - prev.latitude;
         if (isEqu(x, 0) && isEqu(y, dist))

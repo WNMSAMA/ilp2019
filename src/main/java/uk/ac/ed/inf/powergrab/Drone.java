@@ -4,25 +4,31 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
+ * The abstract Drone class has an abstract method play() which is the strategy of the drone.
+ * The class will construct a drone type.
+ * The class
+ *
  * @author s1703367
+ * @since 2019-10-25
+ *
  */
 public abstract class Drone {
     protected Position position;
-    protected double remainCoins;
-    protected double remainPower;
-    protected int remainSteps;
-    protected final Random rnd;
-    protected final ArrayList<Station> stations;
-    protected final ArrayList<Station> badStations;
-    protected final ArrayList<Station> goodStations;
-    protected static final double CHARGE_RANGE = 0.00025;
+    double remainCoins;
+    double remainPower;
+    int remainSteps;
+    final Random rnd;
+    final ArrayList<Station> stations;
+    final ArrayList<Station> badStations;
+    final ArrayList<Station> goodStations;
+    static final double CHARGE_RANGE = 0.00025;
 
     public enum DroneType {
         STATEFUL, STATELESS
     }
 
-    protected final DroneType droneType;
-    protected boolean gameStatus;
+    private final DroneType droneType;
+    boolean gameStatus;
 
     /**
      * This is the constructor of the Drone class
@@ -35,7 +41,7 @@ public abstract class Drone {
      * @param stations The stations on the map.
      * @param rnd The random seed.
      */
-    public Drone(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
+    Drone(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
         this.position = position;
         this.droneType = droneType;
         this.stations = stations;
@@ -61,7 +67,7 @@ public abstract class Drone {
      * format =  55.944212867965646,-3.1881838679656442,NW,55.944425,-3.188396,63.775421544612854,247.8231837318418
      *
      */
-    public abstract ArrayList<String> play();
+    protected abstract ArrayList<String> play();
 
     /**
      * The method which will move the drone in the give direction.
@@ -69,7 +75,7 @@ public abstract class Drone {
      *
      * @param d The direction of the next move of the drone.
      */
-    public void move(Direction d) {
+    void move(Direction d) {
         this.position = this.position.nextPosition(d);
         this.remainPower -= 1.25;
         this.remainSteps -= 1;
@@ -80,12 +86,13 @@ public abstract class Drone {
 
     /**
      * This method will return the Station which is the closest to the current position.
+     * If the input length of ArrayList is 0,return null.
      *
      * @param sts The ArrayList of all stations.
      * @param dp The current drone position.
      * @return The Station which is closest to the current position.
      */
-    public static Station findNearest(ArrayList<Station> sts, Position dp) {
+    static Station findNearest(ArrayList<Station> sts, Position dp) {
         if(sts.size() == 0) return null;
         sts.sort((s1, s2) -> {//First sort Stations by distance to the drone
             Position p1 = s1.getCorrdinate();
@@ -106,8 +113,10 @@ public abstract class Drone {
      *  will have 0 power and 0 coins remain. If a Station has negative power and coin, the drone will lose
      *  power and coins.
      *
+     *  The Drone will always try to charge after each move.
+     *
      */
-    public void charge() {
+    void charge() {
             Station s = findNearest(this.stations,this.position);
             if (euclidDist(s.getCorrdinate(), this.position) <= CHARGE_RANGE) {
                 if (s.getCoins() < 0) {// If Station is negatively charged.
@@ -137,7 +146,7 @@ public abstract class Drone {
      * @param y The second position
      * @return The Euclidean Distance between x and y.
      */
-    public static double euclidDist(Position x, Position y) {
+    static double euclidDist(Position x, Position y) {
         double sq1 = Math.pow(x.getLatitude() - y.getLatitude(), 2);
         double sq2 = Math.pow(x.getLongitude() - y.getLongitude(), 2);
         return Math.sqrt(sq1 + sq2);
@@ -147,14 +156,14 @@ public abstract class Drone {
      * This method returns a boolean value indicates whether a position the drone can reach.
      * The method will return false when the input position is not in play area.
      * If the drone is going to charge at a DANGER station at the input position(The drone is closer to DANGER than LIGHTHOUSE),
-     * return false.
+     * return false. Otherwise return true.
      *
      * @param pos The position where the drone is going to.
      * @param badstations ArrayList of Station with initial label DANGER
      * @param goodstations ArrayList of Station with initial label LIGHTHOUSE
      * @return boolean value indicates whether the move is valid.
      */
-    public static boolean canReach(Position pos, ArrayList<Station> badstations, ArrayList<Station> goodstations) {
+    static boolean canReach(Position pos, ArrayList<Station> badstations, ArrayList<Station> goodstations) {
         if (!pos.inPlayArea())
             return false;
         ArrayList<Station> rangebad = new ArrayList<>();
@@ -197,11 +206,12 @@ public abstract class Drone {
      *         |         |
      *         -----------
      *           0.0005
+     *
      * @param currpos current position of the drone.
      * @param s The station needs to be checked.
      * @return boolean value indicates whether the station is in the range.
      */
-    public static boolean inRange(Position currpos, Station s) {
+    private static boolean inRange(Position currpos, Station s) {
         double x1 = currpos.getLatitude() + CHARGE_RANGE;
         double x2 = currpos.getLatitude() - CHARGE_RANGE;
         double y1 = currpos.getLongitude() + CHARGE_RANGE;

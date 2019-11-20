@@ -9,8 +9,9 @@ import com.mapbox.geojson.*;
 
 /**
  * @author s1703367
+ * @since 2019-10-25
  */
-public class LoadMap {
+class LoadMap {
     private FeatureCollection fc;
     private final ArrayList<Station> stations;
 
@@ -20,7 +21,7 @@ public class LoadMap {
      * @throws java.io.IOException
      */
     @SuppressWarnings("resource")
-    public LoadMap(URL mapURL) throws java.io.IOException {
+    LoadMap(URL mapURL) throws java.io.IOException {
         this.stations = new ArrayList<>();
         HttpURLConnection huc = (HttpURLConnection) mapURL.openConnection();
         huc.setReadTimeout(10000);
@@ -33,11 +34,12 @@ public class LoadMap {
         String str = s.hasNext() ? s.next() : "";
         this.fc = FeatureCollection.fromJson(str);
     }
-    public ArrayList<Station> getStations(){
+
+    ArrayList<Station> getStations(){
         return this.stations;
     }
 
-    public FeatureCollection getFc() {
+    FeatureCollection getFc() {
         return fc;
     }
 
@@ -47,7 +49,7 @@ public class LoadMap {
      *
      * @throws java.lang.NullPointerException
      */
-    public void saveStations() throws  java.lang.NullPointerException{
+    void saveStations() throws  java.lang.NullPointerException{
         for (Feature each : this.fc.features()) {
             String id = each.getProperty("id").getAsString();
             double coins = each.getProperty("coins").getAsDouble();

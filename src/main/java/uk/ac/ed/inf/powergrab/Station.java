@@ -2,6 +2,7 @@ package uk.ac.ed.inf.powergrab;
 
 /**
  * @author s1703367
+ * @since 2019-10-25
  */
 public class Station {
     private final String id;
@@ -14,14 +15,15 @@ public class Station {
     private final Position position;
 
     /**
-     * The constructor of Station
+     * The constructor of Station.
+     *
      * @param id ID of a station.
      * @param coins Initial coins in a station
      * @param power Initial power in a station
      * @param symbol The symbol of a station.
      * @param position The position of a station.
      */
-    public Station(String id, double coins , double power,Symbol symbol,Position position) {
+    Station(String id, double coins, double power, Symbol symbol, Position position) {
         this.id = id;
         this.coins = coins;
         this.power = power;
@@ -30,28 +32,28 @@ public class Station {
     }
 
     //getter and setters.
-    public String getId(){
+    String getId(){
         return this.id;
     }
-    public double getCoins() {
+    double getCoins() {
         return coins;
     }
-    public void setCoins(double coins) {
+    void setCoins(double coins) {
         this.coins = coins;
     }
-    public double getPower() {
+    double getPower() {
         return power;
     }
-    public void setPower(double power) {
+    void setPower(double power) {
         this.power = power;
     }
-    public Symbol getSymbol() {
+    Symbol getSymbol() {
         return symbol;
     }
-    public void setSymbol(Symbol symbol) {
+    void setSymbol(Symbol symbol) {
         this.symbol = symbol;
     }
-    public Position getCorrdinate() {
+    Position getCorrdinate() {
         return this.position;
     }
     @Override

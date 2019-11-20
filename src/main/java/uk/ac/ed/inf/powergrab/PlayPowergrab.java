@@ -1,8 +1,6 @@
 package uk.ac.ed.inf.powergrab;
 
-import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
@@ -10,9 +8,14 @@ import java.util.Random;
 import com.mapbox.geojson.*;
 
 /**
+ * The playpowergrab class will output two files: .txt and .geojson by taking the input arguments:
+ * The date of a map, The start position of the drone, the random seed and the drone type.
+ *
  * @author s1703367
+ * @since 2019-10-25
  */
 public class PlayPowergrab {
+
     /**
      * This method takes the output of a drone's track.
      * e.g.
@@ -43,7 +46,6 @@ public class PlayPowergrab {
      * @param fc The old FeatureCollection which need to add a LineString Feature.
      * @param input The ArrayList of Point
      * @return A String in Geojson style.
-     * @throws java.lang.NullPointerException
      */
     private static String getNewGeoJson(FeatureCollection fc, ArrayList<Point> input){
         LineString ls = LineString.fromLngLats(input);
@@ -56,6 +58,12 @@ public class PlayPowergrab {
 
     /**
      *The main function used to output files.
+     * The function will take first three input arguments as YYYY-MM-DD and format them to a URL to load the map.
+     * The fourth and fifth argument will be the initial start position pf the drone.
+     * The sixth argument is the random seed and the seventh is the drone type.
+     * The function will construct a drone and run the play() method to get the result.
+     * Then the result will be constructed to two output files: .txt and .geojson
+     *
      * @param args The console inputs.
      */
     public static void main(String[] args){

@@ -6,21 +6,23 @@ import java.util.Random;
 
 /**
  * @author s1703367
+ * @since 2019-11-02
  */
 public class Stateful extends Drone {
     private final AstarPath astarpath;
 
     /**
      * The constructor of a Stateful drone.
+     * Initialize the path finder with DANGERs and LIGHTHOUSEs.
      *
      * @param position The initial position.
      * @param droneType The type of the drone.
      * @param stations The stations on the map.
      * @param rnd The random seed.
      */
-    public Stateful(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
+    Stateful(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
         super(position, droneType, stations, rnd);
-        this.astarpath = new AstarPath(this.badStations, this.goodStations);// initialize the path finder.
+        this.astarpath = new AstarPath(this.badStations, this.goodStations);
     }
 
     /**
@@ -47,7 +49,7 @@ public class Stateful extends Drone {
             Direction d = Direction.values()[rnd.nextInt(16)];// randomly select a direction.
             Position nextpos = this.position.nextPosition(d);
             if (nextpos.inPlayArea() && Drone.canReach(nextpos, badStations, goodStations)) {
-                return d;//return the direction if valid.
+                return d;
             }
         }
     }
@@ -64,24 +66,23 @@ public class Stateful extends Drone {
     @Override
     public ArrayList<String> play() {
         ArrayList<String> res = new ArrayList<>();
-        ArrayList<Station> remaingood = new ArrayList<>(this.goodStations);// make a copy of all good stations.
+        ArrayList<Station> remaingood = new ArrayList<>(this.goodStations);
         while (remaingood.size() != 0) {// If all good stations have been visited, break the loop.
             Station nearest = findNearest(remaingood, this.position);
-            ArrayList<Position> path = astarpath.findPath(this.position, nearest);//The path to the nearest point.
+            ArrayList<Position> path = astarpath.findPath(this.position, nearest);
             if (path == null) {// If the station cannot be reached, ignore it.
                 remaingood.remove(nearest);
                 continue;
             }
             if(nearest.getCoins() == 0){
-                //If a good station has been charged after a random move, search for next station.
                 remaingood.remove(nearest);
                 continue;
             }
-            if (path.size() <= 1) {// If the drone is in range of a new station without moving, move randomly.
+            if (path.size() <= 1) {// If the drone is already in range of a new station without moving, move randomly.
                 Direction d = moveRandomly();
                 Position prev = this.position;
                 move(d);
-                charge();//Drone will try to charge after every move.
+                charge();
                 String s = String.format("%s,%s,%s,%s,%s", prev, d, this.position, this.remainCoins,
                         this.remainPower);
                 res.add(s);
@@ -101,7 +102,7 @@ public class Stateful extends Drone {
                 if (!this.gameStatus)
                     break;
             }
-            remaingood.remove(nearest);//Mark as charged, keep searching.
+            remaingood.remove(nearest);
         }
         if (this.gameStatus) {// if the game is still not over, move randomly.
             ArrayList<String> finalmoves = goStateless();
