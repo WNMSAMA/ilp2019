@@ -11,6 +11,7 @@ import java.util.List;
 class AstarPath {
     private final ArrayList<Station> bad;
     private final ArrayList<Station> good;
+    private static final int MAXITER = 50;
 
     /**
      * The constructor of AstarPath.
@@ -105,6 +106,7 @@ class AstarPath {
         open.add(init);
         while (open.size() != 0) {
             ArrayList<Position> track = open.get(0);//pick the path with lowest total cost.
+            if(track.size() > MAXITER) return null;
             ArrayList<ArrayList<Position>> rest = new ArrayList<>(open);
             rest.remove(0);
             boolean b = false;

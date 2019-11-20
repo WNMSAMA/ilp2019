@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
+ * The Stateless class is a subclass of drone which indicates the drone is moving Statelessly.
+ *
  * @author s1703367
  * @since 2019-10-27
  */
