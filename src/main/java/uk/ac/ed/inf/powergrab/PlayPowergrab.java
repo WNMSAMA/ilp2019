@@ -3,6 +3,7 @@ package uk.ac.ed.inf.powergrab;
 import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import com.mapbox.geojson.*;
@@ -84,6 +85,12 @@ public class PlayPowergrab {
             }
             else
                 throw new java.lang.IllegalArgumentException("Invalid drone type.");
+            Solver sol = new Solver(drone.goodStations,rnd);
+            Station[] solu = sol.findPermu();
+            for(Station each : solu){
+                System.out.print(each.getCorrdinate());
+                System.out.println(",");
+            }
             ArrayList<String> res = drone.play();
             ArrayList<Point> points = getPoints(res);
             String geojsonmap = getNewGeoJson(map.getFc(),points);

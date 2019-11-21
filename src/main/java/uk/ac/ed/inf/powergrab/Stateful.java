@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.powergrab;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -105,10 +106,12 @@ public class Stateful extends Drone {
             remaingood.remove(nearest);
         }
         if (this.gameStatus) {// if the game is still not over, move randomly.
+            System.out.println("All LIGHTHOUSE have been visited, steps = " + res.size() + ", Going stateless move.");
             ArrayList<String> finalmoves = goStateless();
             res.addAll(finalmoves);
         }
+        DecimalFormat f = new DecimalFormat("##.00");
+        System.out.println("Stateful Percentage = " + f.format((this.remainCoins/this.perfectscore)*100) +"%");
         return res;
     }
-
 }

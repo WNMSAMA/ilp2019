@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.powergrab;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -25,7 +26,7 @@ public class Stateless extends Drone {
 
 
     /**
-     * The stateless drone will only move to a positive station if it can reach that station with in one step.
+     * The stateless drone will only move to a positive station if it can reach that station within one step.
      * If not, move randomly and avoid danger stations.
      *
      * @return An ArrayList of String, each String is in required output format.
@@ -70,6 +71,9 @@ public class Stateless extends Drone {
                     .append(this.remainCoins).append(",").append(this.remainPower);
             res.add(sb.toString());//add status of the drone after the move.
         }
+        System.out.println("Gameover! Final score = " + this.remainCoins + ", Perfectscore = " + this.perfectscore);
+        DecimalFormat f = new DecimalFormat("##.00");
+        System.out.println("Stateless Percentage = " + f.format((this.remainCoins/this.perfectscore)*100) +"%");
         return res;
     }
 

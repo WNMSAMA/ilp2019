@@ -135,7 +135,7 @@ public class Position {
 
     @Override
     public String toString() {
-        return "" + this.latitude + "," + this.longitude + "";
+        return "[" + this.longitude + "," +  this.latitude+ "]";
     }
 
 }

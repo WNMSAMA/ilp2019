@@ -10,7 +10,6 @@ import java.util.Random;
  *
  * @author s1703367
  * @since 2019-10-25
- *
  */
 public abstract class Drone {
     protected Position position;
@@ -29,6 +28,7 @@ public abstract class Drone {
 
     private final DroneType droneType;
     boolean gameStatus;
+    final double perfectscore;// create this for debug convenience.
 
     /**
      * This is the constructor of the Drone class
@@ -36,10 +36,10 @@ public abstract class Drone {
      * Initialize coins to 0, power and steps to 250.
      * Separate Danger and LIGHTHOUSE.
      *
-     * @param position The initial position.
+     * @param position  The initial position.
      * @param droneType The type of the drone.
-     * @param stations The stations on the map.
-     * @param rnd The random seed.
+     * @param stations  The stations on the map.
+     * @param rnd       The random seed.
      */
     Drone(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
         this.position = position;
@@ -52,12 +52,16 @@ public abstract class Drone {
         this.remainSteps = 250;
         this.goodStations = new ArrayList<>();
         this.badStations = new ArrayList<>();
+        int score = 0;
         for (Station each : this.stations) {// Separate all lighthouses and dangers.
             if (each.getSymbol() == Station.Symbol.DANGER)
                 badStations.add(each);
-            if (each.getSymbol() == Station.Symbol.LIGHTHOUSE || each.getSymbol() == Station.Symbol.DEAD)
+            if (each.getSymbol() == Station.Symbol.LIGHTHOUSE || each.getSymbol() == Station.Symbol.DEAD) {
                 goodStations.add(each);
+                score += each.getCoins();
+            }
         }
+        this.perfectscore = score;
     }
 
     /**
@@ -65,7 +69,6 @@ public abstract class Drone {
      *
      * @return An ArrayList of String, each String is in the output format.
      * format =  55.944212867965646,-3.1881838679656442,NW,55.944425,-3.188396,63.775421544612854,247.8231837318418
-     *
      */
     protected abstract ArrayList<String> play();
 
@@ -79,7 +82,7 @@ public abstract class Drone {
         this.position = this.position.nextPosition(d);
         this.remainPower -= 1.25;
         this.remainSteps -= 1;
-        if (this.remainSteps == 0 || this.remainPower <= 0){
+        if (this.remainSteps == 0 || this.remainPower <= 0) {
             this.gameStatus = false;
         }
     }
@@ -89,11 +92,11 @@ public abstract class Drone {
      * If the input length of ArrayList is 0,return null.
      *
      * @param sts The ArrayList of all stations.
-     * @param dp The current drone position.
+     * @param dp  The current drone position.
      * @return The Station which is closest to the current position.
      */
     static Station findNearest(ArrayList<Station> sts, Position dp) {
-        if(sts.size() == 0) return null;
+        if (sts.size() == 0) return null;
         sts.sort((s1, s2) -> {//First sort Stations by distance to the drone
             Position p1 = s1.getCorrdinate();
             Position p2 = s2.getCorrdinate();
@@ -107,36 +110,35 @@ public abstract class Drone {
     }
 
     /**
-     *  This method let the drone charge at the nearest station(If the drone is in the range of the Station).
-     *  If no station is in range, doing nothing.
-     *  If the station has positive power and coin, the drone will gain all the power and coin,the Station
-     *  will have 0 power and 0 coins remain. If a Station has negative power and coin, the drone will lose
-     *  power and coins.
-     *
-     *  The Drone will always try to charge after each move.
-     *
+     * This method let the drone charge at the nearest station(If the drone is in the range of the Station).
+     * If no station is in range, doing nothing.
+     * If the station has positive power and coin, the drone will gain all the power and coin,the Station
+     * will have 0 power and 0 coins remain. If a Station has negative power and coin, the drone will lose
+     * power and coins.
+     * <p>
+     * The Drone will always try to charge after each move.
      */
     void charge() {
-            Station s = findNearest(this.stations,this.position);
-            if (euclidDist(s.getCorrdinate(), this.position) <= CHARGE_RANGE) {
-                if (s.getCoins() < 0) {// If Station is negatively charged.
-                    double coins = this.remainCoins;
-                    double power = this.remainPower;
-                    this.remainCoins = this.remainCoins + s.getCoins() <= 0 ? 0 : this.remainCoins + s.getCoins();
-                    this.remainPower = this.remainPower + s.getPower() <= 0 ? 0 : this.remainPower + s.getPower();
-                    s.setCoins(s.getCoins() + coins > 0 ? 0 : s.getCoins() + coins);
-                    s.setPower(s.getPower() + power > 0 ? 0 : s.getPower() + power);
-                    if(s.getCoins() == 0) s.setSymbol(Station.Symbol.DEAD);
-                    if (this.remainPower == 0)
-                        this.gameStatus = false;
-                } else {// If the Station is positively charged.
-                    this.remainCoins += s.getCoins();
-                    this.remainPower += s.getPower();
-                    s.setPower(0);
-                    s.setCoins(0);
-                    s.setSymbol(Station.Symbol.DEAD);
-                }
+        Station s = findNearest(this.stations, this.position);
+        if (euclidDist(s.getCorrdinate(), this.position) <= CHARGE_RANGE) {
+            if (s.getCoins() < 0) {// If Station is negatively charged.
+                double coins = this.remainCoins;
+                double power = this.remainPower;
+                this.remainCoins = this.remainCoins + s.getCoins() <= 0 ? 0 : this.remainCoins + s.getCoins();
+                this.remainPower = this.remainPower + s.getPower() <= 0 ? 0 : this.remainPower + s.getPower();
+                s.setCoins(s.getCoins() + coins > 0 ? 0 : s.getCoins() + coins);
+                s.setPower(s.getPower() + power > 0 ? 0 : s.getPower() + power);
+                if (s.getCoins() == 0) s.setSymbol(Station.Symbol.DEAD);
+                if (this.remainPower == 0)
+                    this.gameStatus = false;
+            } else {// If the Station is positively charged.
+                this.remainCoins += s.getCoins();
+                this.remainPower += s.getPower();
+                s.setPower(0);
+                s.setCoins(0);
+                s.setSymbol(Station.Symbol.DEAD);
             }
+        }
     }
 
     /**
@@ -158,8 +160,8 @@ public abstract class Drone {
      * If the drone is going to charge at a DANGER station at the input position(The drone is closer to DANGER than LIGHTHOUSE),
      * return false. Otherwise return true.
      *
-     * @param pos The position where the drone is going to.
-     * @param badstations ArrayList of Station with initial label DANGER
+     * @param pos          The position where the drone is going to.
+     * @param badstations  ArrayList of Station with initial label DANGER
      * @param goodstations ArrayList of Station with initial label LIGHTHOUSE
      * @return boolean value indicates whether the move is valid.
      */
@@ -177,18 +179,19 @@ public abstract class Drone {
                 rangegood.add(s);
         });//get all good stations which are roughly in the charge range to reduce computation cost.
         if (rangebad.size() != 0) {//If no bad stations in range, return true.
-            Station bad = findNearest(badstations,pos);
-                double disttobad = euclidDist(pos, bad.getCorrdinate());
-                if (disttobad <= CHARGE_RANGE) {
-                    if (rangegood.size() != 0) {
-                        for (Station good : rangegood) {// If a good station is closer than a bad station, return true.
-                            double disttogood = euclidDist(pos, good.getCorrdinate());
-                            if (disttobad > disttogood)
-                                return true;
+            Station bad = findNearest(badstations, pos);
+            double disttobad = euclidDist(pos, bad.getCorrdinate());
+            if (disttobad <= CHARGE_RANGE) {
+                if (rangegood.size() != 0) {
+                    for (Station good : rangegood) {// If a good station is closer than a bad station, return true.
+                        double disttogood = euclidDist(pos, good.getCorrdinate());
+                        if (disttobad > disttogood)
+                            return true;
 
                     }
 
-                }return false;//else return false.
+                }
+                return false;//else return false.
 
             }
         }
@@ -199,16 +202,16 @@ public abstract class Drone {
     /**
      * Check if a station is roughly in range of a station
      * If a station is in the square area below, return true.
-     *           0.0005
-     *         -----------
-     *         |         |
+     * 0.0005
+     * -----------
+     * |         |
      * 0.0005  |    D    | 0.0005
-     *         |         |
-     *         -----------
-     *           0.0005
+     * |         |
+     * -----------
+     * 0.0005
      *
      * @param currpos current position of the drone.
-     * @param s The station needs to be checked.
+     * @param s       The station needs to be checked.
      * @return boolean value indicates whether the station is in the range.
      */
     private static boolean inRange(Position currpos, Station s) {
