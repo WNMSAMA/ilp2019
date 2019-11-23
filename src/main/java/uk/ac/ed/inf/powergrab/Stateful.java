@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.powergrab;
 
+import java.sql.SQLOutput;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,9 +68,16 @@ public class Stateful extends Drone {
     @Override
     protected ArrayList<String> play() {
         ArrayList<String> res = new ArrayList<>();
-        ArrayList<Station> remaingood = new ArrayList<>(this.goodStations);
+        Station dummy = new Station("dummy" , 0,250, Station.Symbol.LIGHTHOUSE,this.position);
+        ArrayList<Station> runs = new ArrayList<>(this.goodStations);
+        runs.add(0,dummy);
+        TSP tsp = new TSP(0, 100, 10000,1.0f,1.0f,runs,rnd);
+        ArrayList<Station> remaingood = tsp.solve();
+        for(Station each : remaingood){
+            System.out.println(each.getCorrdinate() + ",");
+        }
         while (remaingood.size() != 0) {// If all good stations have been visited, break the loop.
-            Station nearest = findNearest(remaingood, this.position);
+            Station nearest = remaingood.get(0);
             ArrayList<Position> path = astarpath.findPath(this.position, nearest);
             if (path == null) {// If the station cannot be reached, ignore it.
                 remaingood.remove(nearest);

@@ -28,7 +28,7 @@ public abstract class Drone {
 
     private final DroneType droneType;
     boolean gameStatus;
-    final double perfectscore;// create this for debug convenience.
+    double perfectscore;// create this for debug convenience.
 
     /**
      * This is the constructor of the Drone class
@@ -52,7 +52,7 @@ public abstract class Drone {
         this.remainSteps = 250;
         this.goodStations = new ArrayList<>();
         this.badStations = new ArrayList<>();
-        int score = 0;
+        double score = 0;
         for (Station each : this.stations) {// Separate all lighthouses and dangers.
             if (each.getSymbol() == Station.Symbol.DANGER)
                 badStations.add(each);

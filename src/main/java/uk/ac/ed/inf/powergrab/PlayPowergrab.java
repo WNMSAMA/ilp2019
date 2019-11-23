@@ -85,12 +85,8 @@ public class PlayPowergrab {
             }
             else
                 throw new java.lang.IllegalArgumentException("Invalid drone type.");
-            Solver sol = new Solver(drone.goodStations,rnd);
-            Station[] solu = sol.findPermu();
-            for(Station each : solu){
-                System.out.print(each.getCorrdinate());
-                System.out.println(",");
-            }
+            //TSP ga = new TSP(0, 30, 10000,0.7f,0.9f,drone.goodStations,rnd);
+            //ga.solve();
             ArrayList<String> res = drone.play();
             ArrayList<Point> points = getPoints(res);
             String geojsonmap = getNewGeoJson(map.getFc(),points);

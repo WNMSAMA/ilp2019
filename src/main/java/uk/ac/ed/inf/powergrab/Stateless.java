@@ -71,7 +71,7 @@ public class Stateless extends Drone {
                     .append(this.remainCoins).append(",").append(this.remainPower);
             res.add(sb.toString());//add status of the drone after the move.
         }
-        System.out.println("Gameover! Final score = " + this.remainCoins + ", Perfectscore = " + this.perfectscore);
+        System.out.println("Gameover! Final score = " + this.remainCoins);
         DecimalFormat f = new DecimalFormat("##.00");
         System.out.println("Stateless Percentage = " + f.format((this.remainCoins/this.perfectscore)*100) +"%");
         return res;
