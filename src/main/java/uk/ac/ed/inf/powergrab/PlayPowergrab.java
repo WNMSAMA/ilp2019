@@ -85,9 +85,10 @@ public class PlayPowergrab {
             }
             else
                 throw new java.lang.IllegalArgumentException("Invalid drone type.");
-            //TSP ga = new TSP(0, 30, 10000,0.7f,0.9f,drone.goodStations,rnd);
-            //ga.solve();
+            double start = System.currentTimeMillis();
             ArrayList<String> res = drone.play();
+            double end= System.currentTimeMillis();
+            System.out.println("Time :" + (end-start));
             ArrayList<Point> points = getPoints(res);
             String geojsonmap = getNewGeoJson(map.getFc(),points);
             StringBuilder sb = new StringBuilder();

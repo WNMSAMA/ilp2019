@@ -71,11 +71,8 @@ public class Stateful extends Drone {
         Station dummy = new Station("dummy" , 0,250, Station.Symbol.LIGHTHOUSE,this.position);
         ArrayList<Station> runs = new ArrayList<>(this.goodStations);
         runs.add(0,dummy);
-        TSP tsp = new TSP(0, 100, 10000,1.0f,1.0f,runs,rnd);
+        TSP tsp = new TSP(0, 20, 10000,0.7,0.9,runs,rnd);
         ArrayList<Station> remaingood = tsp.solve();
-        for(Station each : remaingood){
-            System.out.println(each.getCorrdinate() + ",");
-        }
         while (remaingood.size() != 0) {// If all good stations have been visited, break the loop.
             Station nearest = remaingood.get(0);
             ArrayList<Position> path = astarpath.findPath(this.position, nearest);
