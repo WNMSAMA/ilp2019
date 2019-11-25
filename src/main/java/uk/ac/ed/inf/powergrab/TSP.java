@@ -12,7 +12,7 @@ public class TSP {
         private ArrayList<Station> station;
         private int point;//起始点
         private int scale;// 种群规模
-        private int cityNum; // 城市数量，染色体长度
+        private int Nstations; // 城市数量，染色体长度
         private int MAX_GEN; // 运行代数
         private double[][] distance; // 距离矩阵
         private int bestT;// 最佳出现代数
@@ -44,31 +44,31 @@ public class TSP {
             point = p;
             scale = s;
             this.station = station;
-            cityNum = this.station.size();
+            Nstations = this.station.size();
             MAX_GEN = g;
             Pc = c;
             Pm = m;
             this.random = random;
-            distance = new double[cityNum][cityNum];
+            distance = new double[Nstations][Nstations];
             // 计算距离矩阵
-            for (int i = 0; i < cityNum - 1; i++) {
+            for (int i = 0; i < Nstations - 1; i++) {
                 distance[i][i] = 0; // 对角线为0
-                for (int j = i + 1; j < cityNum; j++) {
+                for (int j = i + 1; j < Nstations; j++) {
                     double rij = Drone.euclidDist(this.station.get(i).getCorrdinate(), this.station.get(j).getCorrdinate());
                     distance[i][j] = rij;
                     distance[j][i] = distance[i][j];
 
                 }
             }
-            distance[cityNum - 1][cityNum - 1] = 0;
+            distance[Nstations - 1][Nstations - 1] = 0;
 
             bestLength = Integer.MAX_VALUE;
-            bestTour = new int[cityNum];
+            bestTour = new int[Nstations];
             bestT = 0;
             t = 0;
 
-            newPopulation = new int[scale][cityNum - 1];
-            oldPopulation = new int[scale][cityNum - 1];
+            newPopulation = new int[scale][Nstations - 1];
+            oldPopulation = new int[scale][Nstations - 1];
             fitness = new double[scale];
             Pi = new double[scale];
         }
@@ -78,15 +78,15 @@ public class TSP {
             // Random random = new Random(System.currentTimeMillis());
             for (k = 0; k < scale; k++)// 种群数
             {
-                oldPopulation[k][0] = random.nextInt(cityNum);
+                oldPopulation[k][0] = random.nextInt(Nstations);
                 while (oldPopulation[k][0] == point) {
-                    oldPopulation[k][0] = random.nextInt(cityNum);
+                    oldPopulation[k][0] = random.nextInt(Nstations);
                 }
-                for (i = 1; i < cityNum - 1; )// 染色体长度
+                for (i = 1; i < Nstations - 1; )// 染色体长度
                 {
-                    oldPopulation[k][i] = random.nextInt(this.cityNum);
+                    oldPopulation[k][i] = random.nextInt(this.Nstations);
                     while (oldPopulation[k][i] == point) {
-                        oldPopulation[k][i] = random.nextInt(cityNum);
+                        oldPopulation[k][i] = random.nextInt(Nstations);
                     }
                     for (j = 0; j < i; j++) {
                         if (oldPopulation[k][i] ==  oldPopulation[k][j]) {
@@ -100,21 +100,21 @@ public class TSP {
             }
         }
         public int[] initgreedy(){
-            int[] res = new int[cityNum-1];
+            int[] res = new int[Nstations-1];
 
-            double[][] distcpy = new double[cityNum][cityNum];
-            for(int i = 0 ; i < cityNum;i++){
-                for(int j = 0 ; j< cityNum ;j++){
+            double[][] distcpy = new double[Nstations][Nstations];
+            for(int i = 0 ; i < Nstations;i++){
+                for(int j = 0 ; j< Nstations ;j++){
                     distcpy[i][j] = this.distance[i][j];
                 }
             }
             ArrayList<Integer> remainidx = new ArrayList<>();
-            for(int i = 1 ; i < cityNum;i++){
+            for(int i = 1 ; i < Nstations;i++){
                 remainidx.add(i);
             }
             res[0] = minimum(distcpy[0]);
             remainidx.remove((Integer) res[0]);
-            for(int i = 0 ; i < cityNum;i++){
+            for(int i = 0 ; i < Nstations;i++){
                 distcpy[0][i] = 0;
                 distcpy[res[0]][0] = 0;
                 distcpy[i][0] = 0;
@@ -125,7 +125,7 @@ public class TSP {
             while(remainidx.size()!= 0){
                 res[idx] = minimum(distcpy[res[idx-1]]);
                 remainidx.remove((Integer) res[idx]);
-                for(int i = 0 ; i < cityNum;i++){
+                for(int i = 0 ; i < Nstations;i++){
                     distcpy[res[idx-1]][i] = 0;
                     distcpy[i][res[idx-1]] = 0;
                     distcpy[res[idx-1]][res[idx]] = 0;
@@ -153,7 +153,7 @@ public class TSP {
             // 0123
             double len = 0;
             // 染色体，起始城市,城市1,城市2...城市n,计算长度（代价）
-            for (int i = 1; i < cityNum-1; i++) {
+            for (int i = 1; i < Nstations-1; i++) {
                 len += distance[chromosome[i - 1]][chromosome[i]];
             }
             // 起始城市到第一个城市的距离
@@ -197,7 +197,7 @@ public class TSP {
             if (bestLength > maxevaluation) {
                 bestLength = maxevaluation;
                 bestT = t;// 最好的染色体出现的代数;
-                for (i = 0; i < cityNum - 1; i++) {
+                for (i = 0; i < Nstations - 1; i++) {
                     bestTour[i] = oldPopulation[maxid][i];
                 }
             }
@@ -278,10 +278,10 @@ public class TSP {
             int[] Gh2 = new int[this.newPopulation[k2].length];
             copyArr(Gh1,this.newPopulation[k1]);
             copyArr(Gh2,this.newPopulation[k2]);
-            int ran1 = random.nextInt(cityNum-1);
-            int ran2 = random.nextInt(cityNum-1);
+            int ran1 = random.nextInt(Nstations-1);
+            int ran2 = random.nextInt(Nstations-1);
             while (ran1 == ran2) {
-                ran2 = random.nextInt(cityNum - 1);
+                ran2 = random.nextInt(Nstations - 1);
             }
             if (ran1 > ran2)
             {
@@ -293,7 +293,7 @@ public class TSP {
             int idx2 = 0;
             int[] swp1 = Arrays.copyOfRange(Gh1,ran1,ran2+1);
             int[] swp2 = Arrays.copyOfRange(Gh2,ran1,ran2+1);
-            for(int i = 0;i < cityNum-1; i++){
+            for(int i = 0;i < Nstations-1; i++){
                 int n = i;
                 while(idx1 >= ran1 && idx1 <= ran2){
                     idx1 ++;
@@ -313,17 +313,17 @@ public class TSP {
         }
         public void OXCross2(int k1,int k2){
             ArrayList<Integer> idxs = new ArrayList<>();
-            int[] S1 = new int[cityNum-1];
-            int[] S2 = new int[cityNum-1];
+            int[] S1 = new int[Nstations-1];
+            int[] S2 = new int[Nstations-1];
             int[] Gh1 = new int[this.newPopulation[k1].length];
             int[] Gh2 = new int[this.newPopulation[k2].length];
             copyArr(Gh1,this.newPopulation[k1]);
             copyArr(Gh2,this.newPopulation[k2]);
-            int ran = random.nextInt(cityNum-1);
+            int ran = random.nextInt(Nstations-1);
             for (int i = 0; i < ran; i++) {
-                int rnd1 = random.nextInt(cityNum-1);
+                int rnd1 = random.nextInt(Nstations-1);
                 while (idxs.contains((Integer) rnd1)) {
-                    rnd1 = random.nextInt(cityNum-1);
+                    rnd1 = random.nextInt(Nstations-1);
                 }
                 idxs.add(rnd1);
             }
@@ -333,7 +333,7 @@ public class TSP {
             }
             int idx1 = 0;
             int idx2 = 0;
-            for (int i = 0; i < cityNum-1; i++) {
+            for (int i = 0; i < Nstations-1; i++) {
                 while (S1[i] == 0) {
                     int n = idx2;
                     if (Arrays.stream(S1).anyMatch(x -> x == Gh2[n])) {
@@ -346,7 +346,7 @@ public class TSP {
                 }
 
             }
-            for (int i = 0; i < cityNum-1; i++) {
+            for (int i = 0; i < Nstations-1; i++) {
                 while(S2[i] == 0) {
                     int n = idx1;
                     if (Arrays.stream(S2).anyMatch(x -> x == Gh1[n])) {
@@ -366,14 +366,14 @@ public class TSP {
             int ran1, ran2, temp;
             int count;// 对换次数
 
-            //count = random.nextInt(cityNum - 1);
+            //count = random.nextInt(Nstations - 1);
 
             //for (int i = 0; i < count; i++) {
 
-                ran1 = random.nextInt(cityNum - 1);
-                ran2 = random.nextInt(cityNum - 1);
+                ran1 = random.nextInt(Nstations - 1);
+                ran2 = random.nextInt(Nstations - 1);
                 while (ran1 == ran2) {
-                    ran2 = random.nextInt(cityNum - 1);
+                    ran2 = random.nextInt(Nstations - 1);
                 }
                 temp = newPopulation[k][ran1];
                 newPopulation[k][ran1] = newPopulation[k][ran2];
@@ -398,7 +398,7 @@ public class TSP {
             countRate();
 //            System.out.println("初始种群...");
 //            for (k = 0; k < scale; k++) {
-//                for (i = 0; i < cityNum - 1; i++) {
+//                for (i = 0; i < Nstations - 1; i++) {
 //                    System.out.print(oldPopulation[k][i] + ",");
 //                }
 //                System.out.println();
@@ -409,7 +409,7 @@ public class TSP {
                 evolution1();
                 // 将新种群newGroup复制到旧种群oldGroup中，准备下一代进化
                 for (k = 0; k < scale; k++) {
-                    for (i = 0; i < cityNum-1; i++) {
+                    for (i = 0; i < Nstations-1; i++) {
                         oldPopulation[k][i] = newPopulation[k][i];
                     }
                 }
@@ -423,7 +423,7 @@ public class TSP {
 
 //            System.out.println("最后种群...");
 //            for (k = 0; k < scale; k++) {
-//                for (i = 0; i < cityNum - 1; i++) {
+//                for (i = 0; i < Nstations - 1; i++) {
 //                    System.out.print(oldPopulation[k][i] + ",");
 //                }
 //                System.out.println();
@@ -436,7 +436,7 @@ public class TSP {
             System.out.println(bestLength);
 //            System.out.println("最佳路径：");
 //            System.out.print(point + "-->");
-            for (i = 0; i < cityNum - 1; i++) {
+            for (i = 0; i < Nstations - 1; i++) {
 //                System.out.print(bestTour[i] + "-->");
                 res.add(this.station.get(bestTour[i]));
             }
