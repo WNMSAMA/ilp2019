@@ -3,7 +3,7 @@ package uk.ac.ed.inf.powergrab;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class HillClimbing {
+class HillClimbing {
 
     private int MAX_ITER;
     private int Nstations;
@@ -17,7 +17,7 @@ public class HillClimbing {
 
     /**
      **/
-    public HillClimbing(int maxiter, ArrayList<Station> stations, Random rnd) {
+    HillClimbing(int maxiter, ArrayList<Station> stations, Random rnd) {
         this.MAX_ITER = maxiter;
         this.stations = stations;
         this.Nstations = this.stations.size();
@@ -38,7 +38,7 @@ public class HillClimbing {
         bestPath = new int[Nstations-1];
         bestT = 0;
     }
-    public int minimum(double[] input){
+    private int minimum(double[] input){
         double res = 100;
         int idx = 0;
         for(int i = 0 ; i < input.length;i++){
@@ -48,14 +48,12 @@ public class HillClimbing {
         }
         return idx;
     }
-    public int[] initgreedy(){
+    private int[] initgreedy(){
         int[] res = new int[Nstations-1];
 
         double[][] distcpy = new double[Nstations][Nstations];
         for(int i = 0 ; i < Nstations;i++){
-            for(int j = 0 ; j< Nstations ;j++){
-                distcpy[i][j] = this.distance[i][j];
-            }
+            System.arraycopy(this.distance[i], 0, distcpy[i], 0, Nstations);
         }
         ArrayList<Integer> remainidx = new ArrayList<>();
         for(int i = 1 ; i < Nstations;i++){
@@ -85,11 +83,11 @@ public class HillClimbing {
     }
 
 
-    void initGroup() {
+    private void initGroup() {
         bestPath = initgreedy();
     }
 
-    public double evaluate(int[] permutation) {
+    private double evaluate(int[] permutation) {
         double len = 0;
         for (int i = 0; i < Nstations-2; i++) {
             len += distance[permutation[i]][permutation[i+1]];
@@ -99,16 +97,14 @@ public class HillClimbing {
     }
 
 
-    public void climb(int[] permutation, int maxiter) {
+    private void climb(int[] permutation, int maxiter) {
         int temp;
         int ran1, ran2;
         int[] tempPermu = new int[Nstations-1];
         bestLength = evaluate(permutation);
 
         for (int iter = 0; iter < maxiter; iter++) {
-            for (int i = 0; i < Nstations-1; i++) {
-                tempPermu[i] = permutation[i];
-            }
+            if (Nstations - 1 >= 0) System.arraycopy(permutation, 0, tempPermu, 0, Nstations - 1);
             ran1 = rnd.nextInt(Nstations-1);
             ran2 = rnd.nextInt(Nstations-1);
             while (ran1 == ran2) {
@@ -124,15 +120,13 @@ public class HillClimbing {
             if (e < bestLength) {
                 bestT = iter;
                 bestLength = e;
-                for (int j = 0; j < Nstations-1; j++) {
-                    permutation[j] = tempPermu[j];
-                }
+                if (Nstations - 1 >= 0) System.arraycopy(tempPermu, 0, permutation, 0, Nstations - 1);
             }
         }
 
     }
 
-    public ArrayList<Station> solve() {
+    ArrayList<Station> solve() {
         initGroup();
         climb(bestPath, MAX_ITER);
         ArrayList<Station> res = new ArrayList<>();
