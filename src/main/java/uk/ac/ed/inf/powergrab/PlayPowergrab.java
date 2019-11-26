@@ -3,7 +3,6 @@ package uk.ac.ed.inf.powergrab;
 import java.io.FileOutputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 import com.mapbox.geojson.*;
@@ -85,10 +84,11 @@ public class PlayPowergrab {
             }
             else
                 throw new java.lang.IllegalArgumentException("Invalid drone type.");
+            System.out.println("Current drone type " + drone.getDroneType());
             double start = System.currentTimeMillis();
             ArrayList<String> res = drone.play();
             double end= System.currentTimeMillis();
-            System.out.println("Time :" + (end-start));
+            System.out.println("Time :" + (end-start) + " millsecs");
             ArrayList<Point> points = getPoints(res);
             String geojsonmap = getNewGeoJson(map.getFc(),points);
             StringBuilder sb = new StringBuilder();

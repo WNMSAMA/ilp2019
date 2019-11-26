@@ -26,7 +26,7 @@ public abstract class Drone {
         STATEFUL, STATELESS
     }
 
-    private final DroneType droneType;
+    final DroneType droneType;
     boolean gameStatus;
     double perfectscore;// create this for debug convenience.
 
@@ -72,6 +72,9 @@ public abstract class Drone {
      */
     protected abstract ArrayList<String> play();
 
+    DroneType getDroneType(){
+        return  this.droneType;
+    }
     /**
      * The method which will move the drone in the give direction.
      * Move consumes the drone power and will reduce the remainsteps by 1.
@@ -115,7 +118,7 @@ public abstract class Drone {
      * If the station has positive power and coin, the drone will gain all the power and coin,the Station
      * will have 0 power and 0 coins remain. If a Station has negative power and coin, the drone will lose
      * power and coins.
-     * <p>
+     *
      * The Drone will always try to charge after each move.
      */
     void charge() {
@@ -200,15 +203,15 @@ public abstract class Drone {
     }
 
     /**
-     * Check if a station is roughly in range of a station
-     * If a station is in the square area below, return true.
-     * 0.0005
-     * -----------
-     * |         |
+     * Check if a station is roughly in charge range of the drone
+     * If a station is in the square area centered by the drone, return true.
+     *           0.0005
+     *         -----------
+     *         |         |
      * 0.0005  |    D    | 0.0005
-     * |         |
-     * -----------
-     * 0.0005
+     *         |         |
+     *         -----------
+     *           0.0005
      *
      * @param currpos current position of the drone.
      * @param s       The station needs to be checked.

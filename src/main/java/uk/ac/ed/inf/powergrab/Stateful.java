@@ -57,7 +57,7 @@ public class Stateful extends Drone {
     }
 
     /**
-     * This method uses an HillClimbing search strategy to find the next Station.
+     * This method uses an HillClimbing algorithm to find the next Station.
      * The method calls the path finder with Astar search strategy to find a path from current position to a
      * destination station after found the permutation of stations.
      * After all LIGHTHOUSES have been visited, the drone just move randomly until the end of the game.

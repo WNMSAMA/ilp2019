@@ -3,6 +3,10 @@ package uk.ac.ed.inf.powergrab;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * @author s1703367
+ * @since 2019-11-20
+ */
 class HillClimbing {
 
     private int MAX_ITER;
@@ -16,7 +20,11 @@ class HillClimbing {
 
 
     /**
-     **/
+     *
+     * @param maxiter
+     * @param stations
+     * @param rnd
+     */
     HillClimbing(int maxiter, ArrayList<Station> stations, Random rnd) {
         this.MAX_ITER = maxiter;
         this.stations = stations;
@@ -38,6 +46,12 @@ class HillClimbing {
         bestPath = new int[Nstations-1];
         bestT = 0;
     }
+
+    /**
+     *
+     * @param input
+     * @return
+     */
     private int minimum(double[] input){
         double res = 100;
         int idx = 0;
@@ -48,6 +62,11 @@ class HillClimbing {
         }
         return idx;
     }
+
+    /**
+     *
+     * @return
+     */
     private int[] initgreedy(){
         int[] res = new int[Nstations-1];
 
@@ -82,11 +101,18 @@ class HillClimbing {
         return res;
     }
 
-
+    /**
+     *
+     */
     private void initGroup() {
         bestPath = initgreedy();
     }
 
+    /**
+     *
+     * @param permutation
+     * @return
+     */
     private double evaluate(int[] permutation) {
         double len = 0;
         for (int i = 0; i < Nstations-2; i++) {
@@ -96,7 +122,11 @@ class HillClimbing {
         return len;
     }
 
-
+    /**
+     *
+     * @param permutation
+     * @param maxiter
+     */
     private void climb(int[] permutation, int maxiter) {
         int temp;
         int ran1, ran2;
@@ -126,6 +156,10 @@ class HillClimbing {
 
     }
 
+    /**
+     *
+     * @return
+     */
     ArrayList<Station> solve() {
         initGroup();
         climb(bestPath, MAX_ITER);

@@ -73,7 +73,8 @@ public class Stateless extends Drone {
         }
         System.out.println("Gameover! Final score = " + this.remainCoins);
         DecimalFormat f = new DecimalFormat("##.00");
-        System.out.println("Stateless Percentage = " + f.format((this.remainCoins/this.perfectscore)*100) +"%");
+        if(this.perfectscore != 0)
+            System.out.println("Stateless Percentage = " + f.format((this.remainCoins/this.perfectscore)*100) +"%");
         return res;
     }
 
