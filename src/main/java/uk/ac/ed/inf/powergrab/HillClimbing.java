@@ -3,7 +3,7 @@ package uk.ac.ed.inf.powergrab;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Climbing {
+public class HillClimbing {
 
     private int MAX_ITER;
     private int Nstations;
@@ -17,7 +17,7 @@ public class Climbing {
 
     /**
      **/
-    public Climbing(int maxiter, ArrayList<Station> stations,Random rnd) {
+    public HillClimbing(int maxiter, ArrayList<Station> stations, Random rnd) {
         this.MAX_ITER = maxiter;
         this.stations = stations;
         this.Nstations = this.stations.size();

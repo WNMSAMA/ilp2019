@@ -73,7 +73,7 @@ public class Stateful extends Drone {
         runs.add(0,dummy);
         //TSP tsp = new TSP(0, 20, 10000,0.7,0.9,runs,rnd);
         //ArrayList<Station> remaingood = tsp.solve();
-        Climbing cli = new Climbing(7000,runs,rnd);
+        HillClimbing cli = new HillClimbing(7000,runs,rnd);
         ArrayList<Station> remaingood = cli.solve();
         while (remaingood.size() != 0) {// If all good stations have been visited, break the loop.
             Station nearest = remaingood.get(0);
