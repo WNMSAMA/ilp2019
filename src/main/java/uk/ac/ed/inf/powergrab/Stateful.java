@@ -57,10 +57,9 @@ public class Stateful extends Drone {
     }
 
     /**
-     * This method uses an Greedy search strategy to find the next Station.
-     * The drone will always looks for the closest station after each successful charge.
-     * Then calls the path finder with Astar search strategy to find a path from current position
-     * to the destination Station.
+     * This method uses an HillClimbing search strategy to find the next Station.
+     * The method calls the path finder with Astar search strategy to find a path from current position to a
+     * destination station after found the permutation of stations.
      * After all LIGHTHOUSES have been visited, the drone just move randomly until the end of the game.
      *
      * @return An ArrayList of String, each String is in required output format.
@@ -71,8 +70,6 @@ public class Stateful extends Drone {
         Station dummy = new Station("dummy" , 0,250, Station.Symbol.LIGHTHOUSE,this.position);
         ArrayList<Station> runs = new ArrayList<>(this.goodStations);
         runs.add(0,dummy);
-        //TSP tsp = new TSP(0, 20, 10000,0.7,0.9,runs,rnd);
-        //ArrayList<Station> remaingood = tsp.solve();
         HillClimbing cli = new HillClimbing(7000,runs,rnd);
         ArrayList<Station> remaingood = cli.solve();
         while (remaingood.size() != 0) {// If all good stations have been visited, break the loop.

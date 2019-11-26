@@ -144,10 +144,8 @@ public class HillClimbing {
         for (int i = 0; i < Nstations-1; i++) {
             System.out.print(bestPath[i] + ",");
             res.add(this.stations.get(bestPath[i]));
-            if (i % 10 == 0 && i != 0) {
-                System.out.println();
-            }
         }
+        System.out.println();
         return res;
     }
 }

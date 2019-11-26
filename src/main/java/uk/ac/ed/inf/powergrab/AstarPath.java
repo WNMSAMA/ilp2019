@@ -126,7 +126,7 @@ class AstarPath {
             } else {
                 ArrayList<ArrayList<Position>> next = findNeighbors(track);
                 next.forEach(arrs -> rest.add(0, arrs));
-                explored.add(track.get(0));//add current node to the explored list.
+                explored.add(track.get(0));
                 rest.sort((arg0, arg1) -> {// sort by total cost.
                     double f0 = hValue(arg0.get(0), s.getCorrdinate())+ cost(arg0);
                     double f1 = hValue(arg1.get(0), s.getCorrdinate())+ cost(arg1);
