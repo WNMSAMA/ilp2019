@@ -11,7 +11,7 @@ import java.util.List;
 class AstarPath {
     private final ArrayList<Station> bad;
     private final ArrayList<Station> good;
-    private static final int MAXITER = 50;
+    private static final int MAXITER = 15000;
 
     /**
      * The constructor of AstarPath.
@@ -59,7 +59,7 @@ class AstarPath {
      * @return The cost of the path.
      */
     private double cost(ArrayList<Position> poss) {
-        return poss.size() * 0.000125;
+        return poss.size() * 0.0003;
     }
 
     /**
@@ -98,7 +98,7 @@ class AstarPath {
      * @param s Destination station.
      * @return Best path of the drone.
      */
-    ArrayList<Position> findPath(Position start, Station s){
+    ArrayList<Position> findPath(Position start, Station s) throws PathNotFoundException{
         ArrayList<ArrayList<Position>> open = new ArrayList<>();
         ArrayList<Position> explored = new ArrayList<>();
         ArrayList<Position> init = new ArrayList<>();
@@ -106,7 +106,10 @@ class AstarPath {
         open.add(init);
         while (open.size() != 0) {
             ArrayList<Position> track = open.get(0);//pick the path with lowest total cost.
-            if(track.size() > MAXITER) return null;
+            if(open.size() > MAXITER){
+                throw new PathNotFoundException(
+                        "Station not reachable within "+ this.MAXITER + " steps.");
+            }
             ArrayList<ArrayList<Position>> rest = new ArrayList<>(open);
             rest.remove(0);
             boolean b = false;
@@ -138,7 +141,13 @@ class AstarPath {
                 open.addAll(rest);
             }
         }
-        return null;
+        throw new PathNotFoundException("Station not reachable");
+    }
+    // This class is used to throw custom exceptions.
+    static class PathNotFoundException extends Exception{
+        PathNotFoundException(String msg){
+            super(msg);
+        }
     }
 
 }

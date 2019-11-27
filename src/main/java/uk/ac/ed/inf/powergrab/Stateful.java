@@ -1,6 +1,5 @@
 package uk.ac.ed.inf.powergrab;
 
-import java.sql.SQLOutput;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +10,6 @@ import java.util.Random;
  * @since 2019-11-02
  */
 public class Stateful extends Drone {
-    private final AstarPath astarpath;
 
     /**
      * The constructor of a Stateful drone.
@@ -24,7 +22,6 @@ public class Stateful extends Drone {
      */
     Stateful(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
         super(position, droneType, stations, rnd);
-        this.astarpath = new AstarPath(this.badStations, this.goodStations);
     }
 
     /**
@@ -57,6 +54,49 @@ public class Stateful extends Drone {
     }
 
     /**
+     * This method calls findPath in AstarPath to find a shortest path from start position to the destination.
+     * If a LIGHTHOUSE is surrounded by the DANGERs,the drone will charge at a DANGER station
+     * then charge at the target LIGHTHOUSE(when the coin gain is greater than coin loss).
+     * @param nearest The target station.
+     * @return A ArrayList of Position(The drone's path).
+     */
+    private ArrayList<Position> findPath(Station nearest){
+        AstarPath astarpath = new AstarPath(this.badStations, this.goodStations);
+        ArrayList<Position> path;
+        try {
+            path = astarpath.findPath(this.position, nearest);
+        } catch (AstarPath.PathNotFoundException e) {
+            ArrayList<Station> tempbad = new ArrayList<>(this.badStations);
+            ArrayList<Station> tempgood = new ArrayList<>(this.goodStations);
+            int badidx = 0;
+            ArrayList<Position> temppath = null;
+            while(true){
+                if(badidx >= tempbad.size()) break;
+                Station assignGood = tempbad.get(badidx);
+                if(assignGood.getCoins() + nearest.getCoins() < 0) {// If it worth to charge at a DANGER
+                    badidx++;
+                    continue;
+                }
+                tempgood.add(assignGood);
+                tempbad.remove(badidx);
+                try{
+                    AstarPath tempAstar = new AstarPath(tempbad,tempgood);
+                    temppath = tempAstar.findPath(this.position,nearest);
+                    this.badStations.remove(assignGood);
+                    this.goodStations.add(assignGood);
+                    break;
+                }catch (AstarPath.PathNotFoundException ee){
+                    tempgood.remove(assignGood);
+                    tempbad.add(assignGood);
+                    badidx++;
+                }
+            }
+            path = temppath;
+        }
+        return path;
+    }
+
+    /**
      * This method uses an HillClimbing algorithm to find the next Station.
      * The method calls the path finder with Astar search strategy to find a path from current position to a
      * destination station after found the permutation of stations.
@@ -74,7 +114,7 @@ public class Stateful extends Drone {
         ArrayList<Station> remaingood = cli.solve();
         while (remaingood.size() != 0) {// If all good stations have been visited, break the loop.
             Station nearest = remaingood.get(0);
-            ArrayList<Position> path = astarpath.findPath(this.position, nearest);
+            ArrayList<Position> path = findPath(nearest);
             if (path == null) {// If the station cannot be reached, ignore it.
                 remaingood.remove(nearest);
                 continue;

@@ -18,8 +18,8 @@ public abstract class Drone {
     int remainSteps;
     final Random rnd;
     final ArrayList<Station> stations;
-    final ArrayList<Station> badStations;
-    final ArrayList<Station> goodStations;
+    ArrayList<Station> badStations;
+    ArrayList<Station> goodStations;
     static final double CHARGE_RANGE = 0.00025;
 
     public enum DroneType {
