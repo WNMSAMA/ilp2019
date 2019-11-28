@@ -10,7 +10,6 @@ class SimulatedAnnealing {
 
     private int Nstations;
     private double[][] distance;
-    private double bestT;
     private int[] bestPath;
     private double bestLength;
     private ArrayList<Station> stations;
@@ -42,7 +41,6 @@ class SimulatedAnnealing {
 
         bestLength = Double.MAX_VALUE;
         bestPath = new int[Nstations-1];
-        bestT = 0;
     }
 
     /**
@@ -106,12 +104,10 @@ class SimulatedAnnealing {
             double e = evaluate(tempPermu);
             double delE = 1000000*(bestLength-e);
             if (e < bestLength) {
-                bestT = T;
                 bestLength = e;
                 if (Nstations - 1 >= 0) System.arraycopy(tempPermu, 0, permutation, 0, Nstations - 1);
             }
             else if(rnd.nextDouble() < Math.exp(delE/T)){
-                bestT = T;
                 bestLength = e;
                 if (Nstations - 1 >= 0) System.arraycopy(tempPermu, 0, permutation, 0, Nstations - 1);
             }
@@ -130,7 +126,6 @@ class SimulatedAnnealing {
         annealing(bestPath);
         ArrayList<Station> res = new ArrayList<>();
         System.out.println("Best at :");
-        System.out.println(bestT);
         System.out.println("Best Path length: ");
         System.out.println(bestLength);
         System.out.println("Best Path: ");
