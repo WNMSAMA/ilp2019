@@ -97,6 +97,7 @@ class AstarPath {
      * @param start Start position.
      * @param s Destination station.
      * @return Best path of the drone.
+     * @throws PathNotFoundException
      */
     ArrayList<Position> findPath(Position start, Station s) throws PathNotFoundException{
         ArrayList<ArrayList<Position>> open = new ArrayList<>();
