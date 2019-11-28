@@ -1,32 +1,30 @@
 package uk.ac.ed.inf.powergrab;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author s1703367
  * @since 2019-11-20
  */
-class HillClimbing {
+class SimulatedAnnealing {
 
-    private int MAX_ITER;
     private int Nstations;
     private double[][] distance;
-    private int bestT;
+    private double bestT;
     private int[] bestPath;
     private double bestLength;
     private ArrayList<Station> stations;
     private Random rnd;
-
+    private static final double d = 0.999993;
+    private static final double INIT_TEMP = 10000;
+    private static final double T0 = 0.01;
 
     /**
      *
-     * @param maxiter
      * @param stations
      * @param rnd
      */
-    HillClimbing(int maxiter, ArrayList<Station> stations, Random rnd) {
-        this.MAX_ITER = maxiter;
+    SimulatedAnnealing(ArrayList<Station> stations, Random rnd) {
         this.stations = stations;
         this.Nstations = this.stations.size();
         this.rnd = rnd;
@@ -49,63 +47,24 @@ class HillClimbing {
 
     /**
      *
-     * @param input
      * @return
      */
-    private int minimum(double[] input){
-        double res = 100;
-        int idx = 0;
-        for(int i = 0 ; i < input.length;i++){
-            if(res > input[i] && input[i] != 0){
-                idx = i;
-                res = input[i];}
+    private int[] shuffel(){
+        int[] temp = new int[Nstations-1];
+        for(int i =1 ; i < Nstations; i++){
+            temp[i-1] = i;
         }
-        return idx;
-    }
-
-    /**
-     *
-     * @return
-     */
-    private int[] initgreedy(){
-        int[] res = new int[Nstations-1];
-
-        double[][] distcpy = new double[Nstations][Nstations];
-        for(int i = 0 ; i < Nstations;i++){
-            System.arraycopy(this.distance[i], 0, distcpy[i], 0, Nstations);
-        }
-        ArrayList<Integer> remainidx = new ArrayList<>();
-        for(int i = 1 ; i < Nstations;i++){
-            remainidx.add(i);
-        }
-        res[0] = minimum(distcpy[0]);
-        remainidx.remove((Integer) res[0]);
-        for(int i = 0 ; i < Nstations;i++){
-            distcpy[0][i] = 0;
-            distcpy[res[0]][0] = 0;
-            distcpy[i][0] = 0;
-            distcpy[0][res[0]] = 0;
-        }
-
-        int idx = 1;
-        while(remainidx.size()!= 0){
-            res[idx] = minimum(distcpy[res[idx-1]]);
-            remainidx.remove((Integer) res[idx]);
-            for(int i = 0 ; i < Nstations;i++){
-                distcpy[res[idx-1]][i] = 0;
-                distcpy[i][res[idx-1]] = 0;
-                distcpy[res[idx-1]][res[idx]] = 0;
+        for(int i =0 ; i < temp.length;i++){
+            int n1 = rnd.nextInt(temp.length);
+            int n2 = rnd.nextInt(temp.length);
+            while(n1 == n2){
+                n2 = rnd.nextInt(temp.length);
             }
-            idx++;
+            int tempint = temp[n1];
+            temp[n1] = temp[n2];
+            temp[n2] = tempint;
         }
-        return res;
-    }
-
-    /**
-     *
-     */
-    private void initGroup() {
-        bestPath = initgreedy();
+        return temp;
     }
 
     /**
@@ -125,15 +84,14 @@ class HillClimbing {
     /**
      *
      * @param permutation
-     * @param maxiter
      */
-    private void climb(int[] permutation, int maxiter) {
+    private void annealing(int[] permutation) {
         int temp;
         int ran1, ran2;
         int[] tempPermu = new int[Nstations-1];
         bestLength = evaluate(permutation);
-
-        for (int iter = 0; iter < maxiter; iter++) {
+        double T = INIT_TEMP;
+        while ( T>T0) {
             if (Nstations - 1 >= 0) System.arraycopy(permutation, 0, tempPermu, 0, Nstations - 1);
             ran1 = rnd.nextInt(Nstations-1);
             ran2 = rnd.nextInt(Nstations-1);
@@ -146,12 +104,19 @@ class HillClimbing {
             tempPermu[ran2] = temp;
 
             double e = evaluate(tempPermu);
-
+            double delE = 1000000*(bestLength-e);
             if (e < bestLength) {
-                bestT = iter;
+                bestT = T;
                 bestLength = e;
                 if (Nstations - 1 >= 0) System.arraycopy(tempPermu, 0, permutation, 0, Nstations - 1);
             }
+            else if(rnd.nextDouble() < Math.exp(delE/T)){
+                bestT = T;
+                bestLength = e;
+                if (Nstations - 1 >= 0) System.arraycopy(tempPermu, 0, permutation, 0, Nstations - 1);
+            }
+            T *= d;
+
         }
 
     }
@@ -161,8 +126,8 @@ class HillClimbing {
      * @return
      */
     ArrayList<Station> solve() {
-        initGroup();
-        climb(bestPath, MAX_ITER);
+        bestPath = shuffel();
+        annealing(bestPath);
         ArrayList<Station> res = new ArrayList<>();
         System.out.println("Best at :");
         System.out.println(bestT);

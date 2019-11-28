@@ -17,7 +17,7 @@ import com.mapbox.geojson.*;
 public class PlayPowergrab {
 
     /**
-     * This method takes the output of a drone's track.
+     * This method takes the output of the Drone.play().
      * e.g.
      * 55.944212867965646,-3.1881838679656442,NW,55.944425,-3.188396,63.775421544612854,247.8231837318418
      * Then picks the position of each move and store them in an ArrayList.
@@ -107,12 +107,11 @@ public class PlayPowergrab {
             outputStream.close();
             outputStream2.close();
         } catch(java.lang.NumberFormatException e){
-            System.out.println("Input longitude or latitude or random seed is not a number.");
-            e.printStackTrace();
+            throw new java.lang.IllegalArgumentException("Input longitude or latitude or random seed is not a number.");
         } catch(java.io.FileNotFoundException e){
             System.out.println("Input map cannot be found!");
             e.printStackTrace();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -49,7 +49,7 @@ class LoadMap {
      *
      * @throws java.lang.NullPointerException
      */
-    void saveStations() throws  java.lang.NullPointerException{
+    void saveStations() {
         for (Feature each : this.fc.features()) {
             String id = each.getProperty("id").getAsString();
             double coins = each.getProperty("coins").getAsDouble();

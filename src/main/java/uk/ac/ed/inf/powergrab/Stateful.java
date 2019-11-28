@@ -55,8 +55,9 @@ public class Stateful extends Drone {
 
     /**
      * This method calls findPath in AstarPath to find a shortest path from start position to the destination.
-     * If a LIGHTHOUSE is surrounded by the DANGERs,the drone will charge at a DANGER station
+     * If a LIGHTHOUSE is surrounded by the DANGERs,the drone will sometimes charge first at a DANGER station
      * then charge at the target LIGHTHOUSE(when the coin gain is greater than coin loss).
+     *
      * @param nearest The target station.
      * @return A ArrayList of Position(The drone's path).
      */
@@ -72,10 +73,13 @@ public class Stateful extends Drone {
             ArrayList<Position> temppath = null;
             while(true){
                 if(badidx >= tempbad.size()) break;
+                tempbad.sort((s1,s2) ->{
+                    if(Double.compare(s1.getCoins(),s2.getCoins()) == 0) return 0;
+                    return s1.getCoins()>s2.getCoins() ? -1 :1;
+                });
                 Station assignGood = tempbad.get(badidx);
                 if(assignGood.getCoins() + nearest.getCoins() < 0) {// If it worth to charge at a DANGER
-                    badidx++;
-                    continue;
+                    break;
                 }
                 tempgood.add(assignGood);
                 tempbad.remove(badidx);
@@ -87,7 +91,7 @@ public class Stateful extends Drone {
                     break;
                 }catch (AstarPath.PathNotFoundException ee){
                     tempgood.remove(assignGood);
-                    tempbad.add(assignGood);
+                    tempbad.add(badidx,assignGood);
                     badidx++;
                 }
             }
@@ -97,7 +101,7 @@ public class Stateful extends Drone {
     }
 
     /**
-     * This method uses an HillClimbing algorithm to find the next Station.
+     * This method uses an SimulatedAnnealing algorithm to find the next Station.
      * The method calls the path finder with Astar search strategy to find a path from current position to a
      * destination station after found the permutation of stations.
      * After all LIGHTHOUSES have been visited, the drone just move randomly until the end of the game.
@@ -110,7 +114,7 @@ public class Stateful extends Drone {
         Station dummy = new Station("dummy" , 0,250, Station.Symbol.LIGHTHOUSE,this.position);
         ArrayList<Station> runs = new ArrayList<>(this.goodStations);
         runs.add(0,dummy);
-        HillClimbing cli = new HillClimbing(7000,runs,rnd);
+        SimulatedAnnealing cli = new SimulatedAnnealing(runs,rnd);
         ArrayList<Station> remaingood = cli.solve();
         while (remaingood.size() != 0) {// If all good stations have been visited, break the loop.
             Station nearest = remaingood.get(0);
