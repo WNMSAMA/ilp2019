@@ -150,5 +150,4 @@ class AstarPath {
             super(msg);
         }
     }
-
 }
