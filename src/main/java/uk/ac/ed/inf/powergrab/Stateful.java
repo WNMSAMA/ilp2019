@@ -114,8 +114,8 @@ public class Stateful extends Drone {
         Station dummy = new Station("dummy" , 0,250, Station.Symbol.LIGHTHOUSE,this.position);
         ArrayList<Station> runs = new ArrayList<>(this.goodStations);
         runs.add(0,dummy);
-        SimulatedAnnealing cli = new SimulatedAnnealing(runs,rnd);
-        ArrayList<Station> remaingood = cli.solve();
+        SimulatedAnnealing annel = new SimulatedAnnealing(runs,rnd);
+        ArrayList<Station> remaingood = annel.solve();
         while (remaingood.size() != 0) {// If all good stations have been visited, break the loop.
             Station nearest = remaingood.get(0);
             ArrayList<Position> path = findPath(nearest);
