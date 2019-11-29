@@ -3,6 +3,7 @@ package uk.ac.ed.inf.powergrab;
 import java.util.*;
 
 /**
+ * This class uses Simulated Annealing to decided the order of the stations.
  * @author s1703367
  * @since 2019-11-20
  */
@@ -20,7 +21,10 @@ class SimulatedAnnealing {
 
     /**
      * The constructor.
-     * @param stations
+     * Initialise the distance matrix.
+     * Initialise bestLength to Double.MAX_VALUE
+     *
+     * @param stations The stations in the map.
      * @param rnd
      */
     SimulatedAnnealing(ArrayList<Station> stations, Random rnd) {
@@ -44,8 +48,9 @@ class SimulatedAnnealing {
     }
 
     /**
+     * This method will initialise the order of the stations by randomly shuffle them.
      *
-     * @return
+     * @return The initialised order of stations.
      */
     private int[] shuffel(){
         int[] temp = new int[Nstations-1];
@@ -66,9 +71,10 @@ class SimulatedAnnealing {
     }
 
     /**
+     * The method will calculate the path length of the input station permutation.
      *
-     * @param permutation
-     * @return
+     * @param permutation The current station permutation.
+     * @return The path length.
      */
     private double evaluate(int[] permutation) {
         double len = 0;
@@ -80,8 +86,10 @@ class SimulatedAnnealing {
     }
 
     /**
+     * The method takes the initialised permutation and apply SimulatedAnnealing to find a solution
+     * which is close to the optimal solution.
      *
-     * @param permutation
+     * @param permutation The initialised permutation.
      */
     private void annealing(int[] permutation) {
         int temp;
@@ -118,8 +126,9 @@ class SimulatedAnnealing {
     }
 
     /**
-     *
-     * @return
+     * The method calls the SA algorithm, finds the order and display it.
+     * Then return an ArrayList<Station> with stations in the new order.
+     * @return An ArrayList of Station.
      */
     ArrayList<Station> solve() {
         bestPath = shuffel();

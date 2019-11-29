@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.powergrab;
 
 /**
+ * This class is the station class.
  * @author s1703367
  * @since 2019-10-25
  */

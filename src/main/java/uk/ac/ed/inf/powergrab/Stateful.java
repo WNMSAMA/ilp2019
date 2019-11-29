@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Random;
 
 /**
+ * This class is the subclass of the Drone.
+ * Applies strategy to earn more coins.
  * @author s1703367
  * @since 2019-11-02
  */

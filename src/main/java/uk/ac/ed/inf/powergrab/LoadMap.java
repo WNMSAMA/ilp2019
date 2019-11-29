@@ -8,6 +8,7 @@ import java.util.Scanner;
 import com.mapbox.geojson.*;
 
 /**
+ * This class loads the stations from the FeatureCollection.
  * @author s1703367
  * @since 2019-10-25
  */

@@ -1,6 +1,8 @@
 package uk.ac.ed.inf.powergrab;
 
 /**
+ * The position class.
+ * Has methods finding positions and directions.
  * @author s1703367
  * @since 2019-09-23
  */
@@ -84,12 +86,18 @@ public class Position {
         return false;
     }
 
+    /**
+     * This method is used to compare two double values.
+     * @param a A double value.
+     * @param b A double value.
+     * @return True if they are equal.
+     */
     private static boolean isEqu(double a, double b) {
         return Math.abs(a - b) <= 1.0E-12d;
     }
 
     /**
-     * Given two positions, this method will return the direction which the drone is moving.
+     * Given two positions, this method will return the direction which the drone was moving in.
      *
      * @param prev The previous position of the drone.
      * @param next The next position of the drone.

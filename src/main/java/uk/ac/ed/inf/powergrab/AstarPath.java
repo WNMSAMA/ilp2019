@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * This class use A* algorithm to find path between two points.
  * @author s1703367
  * @since 2019-11-02
  */

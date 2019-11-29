@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.powergrab;
 
 /**
+ * The direction class has 16 constants.Each constant is one of the direction.
  * @author s1703367
  * @since 2019-09-23
  */

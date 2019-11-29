@@ -6,7 +6,6 @@ import java.util.Random;
 /**
  * The abstract Drone class has an abstract method play() which is the strategy of the drone.
  * The class will construct a drone type.
- * The class
  *
  * @author s1703367
  * @since 2019-10-25
