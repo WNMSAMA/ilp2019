@@ -25,7 +25,7 @@ class SimulatedAnnealing {
      * Initialise bestLength to Double.MAX_VALUE
      *
      * @param stations The stations in the map.
-     * @param rnd
+     * @param rnd The Random initialised with the random seed.
      */
     SimulatedAnnealing(ArrayList<Station> stations, Random rnd) {
         this.stations = stations;

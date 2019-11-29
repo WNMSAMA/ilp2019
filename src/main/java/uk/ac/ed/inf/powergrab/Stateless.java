@@ -19,7 +19,7 @@ public class Stateless extends Drone {
      * @param stations  All the stations
      * @param rnd       The random seed
      */
-    public Stateless(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
+    Stateless(Position position, DroneType droneType, ArrayList<Station> stations, Random rnd) {
         super(position, droneType, stations, rnd);
 
     }

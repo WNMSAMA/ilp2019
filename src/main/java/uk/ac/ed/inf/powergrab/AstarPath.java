@@ -110,7 +110,7 @@ class AstarPath {
             ArrayList<Position> track = open.get(0);//pick the path with lowest total cost.
             if(open.size() > MAXITER){
                 throw new PathNotFoundException(
-                        "Station not reachable within "+ this.MAXITER + " steps.");
+                        "Station not reachable within "+ MAXITER + " steps.");
             }
             ArrayList<ArrayList<Position>> rest = new ArrayList<>(open);
             rest.remove(0);
