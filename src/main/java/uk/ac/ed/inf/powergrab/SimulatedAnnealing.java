@@ -125,7 +125,6 @@ class SimulatedAnnealing {
         bestPath = shuffel();
         annealing(bestPath);
         ArrayList<Station> res = new ArrayList<>();
-        System.out.println("Best at :");
         System.out.println("Best Path length: ");
         System.out.println(bestLength);
         System.out.println("Best Path: ");

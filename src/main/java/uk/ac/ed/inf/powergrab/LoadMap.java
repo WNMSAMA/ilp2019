@@ -54,7 +54,7 @@ class LoadMap {
             String id = each.getProperty("id").getAsString();
             double coins = each.getProperty("coins").getAsDouble();
             double power = each.getProperty("power").getAsDouble();
-            Station.Symbol sym = each.getProperty("marker-symbol").getAsString().equals("lighthouse")
+            Station.Symbol sym = coins > 0 && power >0
                     ? Station.Symbol.LIGHTHOUSE
                     : Station.Symbol.DANGER;
             Position pos = new Position(((Point) each.geometry()).coordinates().get(1),
