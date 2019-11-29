@@ -19,7 +19,7 @@ class SimulatedAnnealing {
     private static final double T0 = 0.01;
 
     /**
-     *
+     * The constructor.
      * @param stations
      * @param rnd
      */
