@@ -122,6 +122,7 @@ public abstract class Drone {
      */
     void charge() {
         Station s = findNearest(this.stations, this.position);
+        if(s == null) return;
         if (euclidDist(s.getCorrdinate(), this.position) <= CHARGE_RANGE) {
             if (s.getCoins() < 0) {// If Station is negatively charged.
                 double coins = this.remainCoins;
@@ -181,7 +182,7 @@ public abstract class Drone {
                 rangegood.add(s);
         });//get all good stations which are roughly in the charge range to reduce computation cost.
         if (rangebad.size() != 0) {//If no bad stations in range, return true.
-            Station bad = findNearest(badstations, pos);
+            Station bad = findNearest(rangebad, pos);
             double disttobad = euclidDist(pos, bad.getCorrdinate());
             if (disttobad <= CHARGE_RANGE) {
                 if (rangegood.size() != 0) {

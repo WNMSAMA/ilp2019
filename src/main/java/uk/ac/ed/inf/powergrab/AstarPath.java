@@ -87,6 +87,7 @@ class AstarPath {
      */
     private boolean checkArrival(Position pos, Station s) {
         Station nearest = Stateful.findNearest(this.good,pos);
+        if(nearest == null) return false;
         return (Drone.euclidDist(pos, s.getCorrdinate()) <= Drone.CHARGE_RANGE) && (nearest.getId().equals(s.getId()));
     }
 
